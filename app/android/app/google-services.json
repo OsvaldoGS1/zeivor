@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1038643480759",
+    "project_id": "seivor-app",
+    "storage_bucket": "seivor-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1038643480759:android:6db0decf6cadd2f02ee532",
+        "android_client_info": {
+          "package_name": "mx.posibilidades.seivor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-e6iPF-ENj_C82plqEMmaCkv47mvBuv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
