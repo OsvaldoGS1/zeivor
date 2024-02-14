@@ -42,6 +42,7 @@ const registro = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
+      å;
     }
     // const new_usuario = new usuarioScheme(req.body);
     const {
@@ -54,6 +55,7 @@ const registro = async (req, res) => {
       sexo,
       nacimiento,
     } = req.body;
+
     const verificar = await usuarioScheme.findOne({
       correo: correo,
     });
@@ -93,6 +95,14 @@ const registro = async (req, res) => {
     });
 
     res.status(200).json({ message: "Registro Exitoso", usuario: resultado });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+};
+
+const actualizarImagen = async (req, res) => {
+  try {
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
