@@ -16,6 +16,8 @@ class RegistroController extends GetxController {
   RxBool acepto = false.obs;
   RxBool isLoading = false.obs;
 
+  RxInt identificador = 0.obs;
+
   Future validar() async {
     isLoading.value = true;
 
@@ -91,5 +93,20 @@ class RegistroController extends GetxController {
         .then((value) {
       Get.offAllNamed(Routes.home);
     });
+  }
+
+  Rx<DateTime> selectedDate = DateTime.now().obs;
+
+  Future selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      barrierColor: whiteTheme_.withOpacity(0.5),
+      initialDate: selectedDate.value,
+      firstDate: DateTime(1910),
+      lastDate: DateTime.now().toLocal(),
+    );
+    if (picked != null && picked != selectedDate.value) {
+      selectedDate.value = picked;
+    }
   }
 }

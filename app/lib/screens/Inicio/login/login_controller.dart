@@ -30,16 +30,12 @@ class LoginController extends GetxController {
   void onInit() async {
     await isBiometricType();
     obtenerUsuario();
-    // isLoggeado.value = Datos().isLogged.value;
-    // if (isLoggeado.value) {
-    //   await isBiometricType();
-    //   await entrar();
-    // }
+
     super.onInit();
   }
 
   void obtenerUsuario() {
-    datos.checkLogin();
+    // datos.checkLogin();
     usuario = datos.recoveryData();
     if (usuario != null && usuario!.tipo == 'ninguno') {
       correo.text = usuario!.correo ?? '';
@@ -150,13 +146,20 @@ class LoginController extends GetxController {
 
       String fecha = DateTime.now().toLocal().toString();
       if (userCredential != null) {
+        // print(userCredential);/
+        // if (!userCredential.additionalUserInfo!.isNewUser) {
+        //   await Get.offAllNamed(Routes.home);
+        //   return;
+        // }
         ApiService apiService = ApiService();
         Map<String, dynamic> body = {
           "correo": userCredential.user!.email,
-          "nombre": userCredential.user!.displayName,
+          "nombre":
+              tipo == 'apple' ? nombre.value : userCredential.user!.displayName,
           "imagen": userCredential.user!.photoURL ?? '',
           "fecha": fecha,
           "tipo": tipo,
+          "apellido": tipo == 'apple' ? apellido.value : ''
         };
         final respuesta = await apiService.fetchData('usuario/registro_redes',
             method: Method.POST, body: body);
@@ -230,29 +233,36 @@ class LoginController extends GetxController {
   // }
 
   //Metodo para iniciar sesion o registrarse Apple
-
+  RxString nombre = ''.obs;
+  RxString apellido = ''.obs;
   Future<UserCredential?> authApple() async {
     try {
       final rawNonce = generateNonce();
+      final nonce = sha256ofString(rawNonce);
 
       ///Se lanza la vista para que el usuario inicie sesion
       ///con su apple id, se recupera su nombre y correo.
-      final result = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+      final result = await SignInWithApple.getAppleIDCredential(scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ], nonce: nonce);
 
       ///Las credenciales obtenidas se registran en firebase console,
       ///propocionando el identity Token del resultado del inicio de
       ///sesion
+      ///
+
+      nombre.value = result.givenName.toString();
+      apellido.value = result.familyName.toString();
+      // print(nombre.value);
       final AuthCredential appleAuthCredential =
           OAuthProvider('apple.com').credential(
         idToken: result.identityToken,
         rawNonce: Platform.isIOS ? rawNonce : null,
-        accessToken: Platform.isIOS ? null : result.authorizationCode,
+        // accessToken: Platform.isIOS ? null : result.authorizationCode,
       );
+
+      // print(appleAuthCredential);
 
       ///Se regresan las credenciales para su posterior uso
       UserCredential userCredential =

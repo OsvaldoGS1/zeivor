@@ -68,7 +68,18 @@ class OfrecerServiciosView3 extends StatelessWidget {
                 },
                 child: Obx(
                   () => controller.selfie.value
-                      ? const SizedBox()
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 20, bottom: 50),
+                          alignment: Alignment.center,
+                          child: ClipRRect(
+                            borderRadius:
+                                BorderRadius.circular(Get.width * 0.6),
+                            child: Image.file(
+                              File(controller.imagenPath.value),
+                              width: Get.width * 0.6,
+                            ),
+                          ),
+                        )
                       : Container(
                           margin: const EdgeInsets.only(top: 50, bottom: 50),
                           child: Center(
@@ -215,7 +226,7 @@ class OfrecerServiciosView3 extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      controller.identificacionGaleria();
+                      controller.identificacionCamara();
                     },
                     child: SizedBox(
                       width: Get.width * 0.4,

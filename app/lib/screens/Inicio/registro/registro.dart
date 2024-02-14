@@ -2,6 +2,7 @@ import 'package:app/config/theme.dart';
 // import 'package:app/routes/app_pages.dart';
 import 'package:app/screens/Inicio/registro/registro_controller.dart';
 import 'package:app/widgets/footer.dart';
+import 'package:app/widgets/textos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -13,8 +14,10 @@ class RegistroView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: whiteTheme_.withOpacity(0.91),
-      appBar: AppBar(),
+      backgroundColor: whiteTheme_,
+      appBar: AppBar(
+        backgroundColor: whiteTheme_,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
@@ -109,6 +112,73 @@ class RegistroView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(top: 20, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Sexo: ',
+                        style: TextStyle(
+                            color: blackTheme_,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 19),
+                      ),
+                    ),
+                    Obx(
+                      () => Container(
+                        // width: Get.width * 0.5,
+                        margin: const EdgeInsets.only(left: 15),
+                        decoration: BoxDecoration(
+                            color: whiteTheme_,
+                            borderRadius: BorderRadius.circular(5)),
+                        // padding: const EdgeInsets.only(left: 10, right: 10),
+                        alignment: Alignment.center,
+                        child: DropdownButton(
+                          items: const [
+                            DropdownMenuItem(
+                              value: 0,
+                              child: Text('Hombre'),
+                            ),
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text('Mujer'),
+                            ),
+                            DropdownMenuItem(
+                              value: 2,
+                              child: Text('Prefiero no decirlo'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            controller.identificador.value =
+                                int.parse(value.toString());
+                          },
+                          value: controller.identificador.value,
+                          icon: const Icon(Icons.arrow_drop_down_rounded),
+                          iconSize: 30,
+                          alignment: Alignment.center,
+                          underline: Container(),
+                          style: const TextStyle(
+                              color: blackTheme_,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  controller.selectDate(context);
+                },
+                child: Container(
+                  child: parrafo('Fecha de nacimiento'),
                 ),
               ),
               Container(

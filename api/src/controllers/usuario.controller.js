@@ -184,24 +184,25 @@ const agregarUsuarioRS = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { correo, nombre, imagen, fecha, tipo } = req.body;
+    const { correo, nombre, imagen, fecha, tipo, apellido } = req.body;
 
-    const sql = `INSERT INTO sei_usuarios (nombre, correo,imagen, tipo_usuario, fecha_registro, estatus, tipo) 
-    VALUES (?,?,?,1,?,'Activo',?);`;
+    const sql = `INSERT INTO sei_usuarios (nombre, correo,imagen, tipo_usuario, fecha_registro, estatus, tipo, apellido_p) 
+    VALUES (?,?,?,1,?,'Activo',?,?);`;
 
     const consultar_correo_sql = `SELECT * FROM sei_usuarios u WHERE u.correo = ?`;
     const [resultado_consulta_correo] = (
       await connection.query(consultar_correo_sql, [correo])
     )[0];
 
-    if (resultado_consulta_correo.tipo === "ninguno") {
-      return res
-        .status(404)
-        .json({ message: "El correo ya existe en nuestro sistema" });
-    }
-
-    if (resultado_consulta_correo.tipo !== "ninguno") {
-      return res.status(200).json(resultado_consulta_correo);
+    if (resultado_consulta_correo) {
+      if (resultado_consulta_correo.tipo === "ninguno") {
+        return res
+          .status(404)
+          .json({ message: "El correo ya existe en nuestro sistema" });
+      }
+      if (resultado_consulta_correo.tipo !== "ninguno") {
+        return res.status(200).json(resultado_consulta_correo);
+      }
     }
 
     const [insertar_usuario] = await connection.query(sql, [
@@ -210,6 +211,7 @@ const agregarUsuarioRS = async (req, res) => {
       imagen,
       fecha,
       tipo,
+      apellido,
     ]);
 
     if (insertar_usuario.affectedRows === 0) {

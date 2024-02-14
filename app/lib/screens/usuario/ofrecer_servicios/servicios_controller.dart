@@ -45,6 +45,7 @@ class ServiciosController extends GetxController {
     );
     if (imagen != null) {
       await croppedFile(imagen.path);
+      selfie.value = true;
     }
   }
 
@@ -60,7 +61,7 @@ class ServiciosController extends GetxController {
           CropAspectRatioPreset.ratio4x3,
           CropAspectRatioPreset.ratio16x9
         ],
-        cropStyle: CropStyle.rectangle,
+        cropStyle: CropStyle.circle,
         compressQuality: 20,
         uiSettings: [
           AndroidUiSettings(

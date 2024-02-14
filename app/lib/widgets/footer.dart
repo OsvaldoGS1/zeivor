@@ -31,7 +31,7 @@ Widget footer() {
             TextSpan(children: [
               TextSpan(text: '© ${DateTime.now().year}'),
               const TextSpan(
-                  text: ' SEIVOR',
+                  text: ' ZEIVOR',
                   style: TextStyle(
                       color: blackTheme_,
                       fontWeight: FontWeight.w700,

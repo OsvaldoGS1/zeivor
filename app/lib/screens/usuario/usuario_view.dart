@@ -55,7 +55,37 @@ class UsuarioView extends StatelessWidget {
                           width: 150,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(75),
-                            child: Image.network(controller.imagenPath.value),
+                            child: Image.network(
+                              controller.imagenPath.value,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  // La imagen se cargó correctamente
+                                  return child;
+                                } else if (loadingProgress
+                                        .cumulativeBytesLoaded ==
+                                    loadingProgress.expectedTotalBytes) {
+                                  // Error al cargar la imagen
+                                  return Image.asset(
+                                      'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png');
+                                } else {
+                                  // La imagen todavía se está cargando, puedes mostrar un indicador de carga si lo deseas
+                                  return const CircularProgressIndicator
+                                      .adaptive(
+                                    backgroundColor: pink_,
+                                  );
+                                }
+                              },
+                              errorBuilder: (BuildContext context, Object error,
+                                  StackTrace? stackTrace) {
+                                // Error al cargar la imagen
+                                return Image.asset(
+                                  'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png',
+                                  scale: 7,
+                                );
+                              },
+                            ),
                           ),
                         ),
                         Positioned(
