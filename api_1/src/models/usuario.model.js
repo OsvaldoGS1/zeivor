@@ -26,7 +26,6 @@ const usuarioScheme = mongoose.Schema({
     default: false,
     index: true,
   },
-  prueba: { type: String, required: true },
   token: { type: String, required: false },
 });
 module.exports = mongoose.model("usuarios", usuarioScheme);
