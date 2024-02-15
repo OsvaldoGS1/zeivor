@@ -21,7 +21,7 @@ const usuarioScheme = mongoose.Schema({
   fecha_nacimiento: { type: Date, required: true },
   estado_lugar: {
     type: Schema.Types.ObjectId,
-    reference: "estados",
+    ref: "estados",
     required: true,
   },
   auth: {
@@ -38,6 +38,11 @@ const usuarioScheme = mongoose.Schema({
     type: Boolean,
     default: false,
     index: true,
+  },
+  favoritos: {
+    type: [{ type: Schema.Types.ObjectId, ref: "oficios" }],
+    required: false,
+    default: [],
   },
   token: { type: String, required: false },
 });
