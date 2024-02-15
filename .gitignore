@@ -1,1 +1,3 @@
 /api_1/.env
+/api_1/public/usuarios
+/api_1/node_modules

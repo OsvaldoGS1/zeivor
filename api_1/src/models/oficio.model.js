@@ -32,6 +32,7 @@ const oficioScheme = mongoose.Schema({
   selfie: { type: String, required: true },
   carta_penal: { type: String, required: false },
   referencia: { type: [{ type: String }], required: true },
+  palabras_claves: { type: [{ type: String }], required: true },
   estatus: {
     type: String,
     enum: ["Activo", "Inactivo", "Rechazado"],
@@ -40,6 +41,11 @@ const oficioScheme = mongoose.Schema({
   verificado: {
     type: Boolean,
     default: false,
+  },
+  fecha_vencimiento: {
+    type: Date,
+    required: false,
+    index: true,
   },
 });
 

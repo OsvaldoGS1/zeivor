@@ -97,6 +97,7 @@ class HomeController extends GetxController {
         List<Placemark> place =
             await placemarkFromCoordinates(ps!.latitude, ps!.longitude);
         lugar = place[0];
+        print(place[0]);
       } else {
         Get.offAllNamed(Routes.permisoUbi);
       }
