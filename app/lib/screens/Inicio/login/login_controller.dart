@@ -30,12 +30,11 @@ class LoginController extends GetxController {
   void onInit() async {
     await isBiometricType();
     obtenerUsuario();
-
     super.onInit();
   }
 
   void obtenerUsuario() {
-    // datos.checkLogin();
+    datos.checkLogin();
     usuario = datos.recoveryData();
     if (usuario != null && usuario!.tipo == 'ninguno') {
       correo.text = usuario!.correo ?? '';
@@ -98,6 +97,7 @@ class LoginController extends GetxController {
           acceso.value = 'huella';
           isBiometric.value = true;
         }
+        // print(listaAutenticacion);
       }
     } else {
       isBiometric.value = false;

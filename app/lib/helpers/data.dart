@@ -21,14 +21,14 @@ class Datos with CacheManager {
     return user;
   }
 
-  bool checkLogin() {
+  void checkLogin() {
     Usuario user = recoveryData();
-    if (user.correo!.isNotEmpty) {
+    if (user.idUsuario != null) {
       isLogged.value = true;
-      return true;
+      // return true;
     } else {
       isLogged.value = false;
-      return false;
+      // return false;
     }
   }
 }
