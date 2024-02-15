@@ -4,6 +4,7 @@ const {
   //   pruebaConection,
   registro,
   iniciar_sesion,
+  actualizarImagen,
 } = require("../controllers/usuario.controller");
 
 const router = Router();
@@ -13,7 +14,7 @@ const router = Router();
 
 router.post("/login", iniciar_sesion);
 router.post("/registro", registro);
-// router.post("/imagen", agregarImagen);
+router.post("/imagen", actualizarImagen);
 // router.post("/registro_redes", agregarUsuarioRS);
 // router.put("/token", agregarToken);
 // router.post("/actualizar", actualizarUsuario);
