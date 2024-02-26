@@ -119,7 +119,9 @@ abstract class AppPages {
     GetPage(
         name: Routes.mensaje,
         page: () => const EnviarMensaje(),
-        binding: DetallesBinding()),
+        binding: DetallesBinding(),
+        transitionDuration: const Duration(milliseconds: 1200),
+        transition: Transition.fade),
 
     //Filtros //Filtros //Filtros //Filtros //Filtros //Filtros //Filtros
 

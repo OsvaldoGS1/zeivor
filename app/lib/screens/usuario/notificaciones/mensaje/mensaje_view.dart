@@ -25,21 +25,23 @@ class MensajeView extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.circular(Get.width * 0.35 / 2),
-                        child: Image.network(
-                          controller.oferta.tipo == 'ninguno'
-                              ? '${ApiService().ruta}${controller.oferta.imagen}'
-                              : '${controller.oferta.imagen}',
-                          // width: Get.width * 0.35,
+                      SizedBox(
+                        width: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: Image.network(
+                            controller.oferta.solicitante!.auth == 'ninguno'
+                                ? '${ApiService().ruta}${controller.oferta.solicitante!.imagen}'
+                                : '${controller.oferta.solicitante!.imagen}',
+                            // width: Get.width * 0.35,
+                          ),
                         ),
                       ),
                       Flexible(
                         child: Column(
                           children: [
                             Text(
-                              '${controller.oferta.nombre} ${controller.oferta.apellidoP ?? ''}'
+                              '${controller.oferta.solicitante!.nombre} ${controller.oferta.solicitante!.apellidoP ?? ''}'
                                   .toUpperCase(),
                               style: const TextStyle(
                                   color: blackTheme_,

@@ -1,5 +1,6 @@
 import 'package:app/config/theme.dart';
 import 'package:app/helpers/api.dart';
+// import 'package:app/helpers/api.dart';
 import 'package:app/screens/usuario/ofrecer_servicios/terminos/input_fromatter.dart';
 import 'package:app/screens/usuario/perfil_trabajador/perfil_trabajador_controller.dart';
 import 'package:app/widgets/textos.dart';
@@ -56,13 +57,83 @@ class PerfilTrabajadorView extends StatelessWidget {
                         parrafo('Imagen Principal:'),
                         Container(
                           alignment: Alignment.center,
-                          margin: const EdgeInsets.only(top: 15),
+                          margin: const EdgeInsets.only(top: 15, bottom: 10),
                           width: Get.width,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(ApiService().ruta +
-                                controller.oficio!.imagen.toString()),
+                                controller.cliente!.imagen.toString()),
                           ),
+                        ),
+                        const Divider(
+                          color: blackTheme_,
+                        ),
+                        parrafo('Imagenes de tu trabajo:'),
+                        Container(
+                          alignment: Alignment.center,
+                          margin: const EdgeInsets.only(top: 15),
+                          width: Get.width,
+                          child:
+                              // controller.cliente!.imagenesTrabajo!.isEmpty
+                              controller.imagenesCliente.isEmpty
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        imagenes(controller);
+                                      },
+                                      child: Column(
+                                        children: [
+                                          parrafoAutoCenter(
+                                              'Sin imagenes, puedes agregar hasta 10 imagenes si lo deseas.'),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 15, bottom: 15),
+                                            child: const Icon(
+                                              Icons.photo_library,
+                                              color: pink_,
+                                              size: 39,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        SizedBox(
+                                          height: Get.height * 0.3,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: controller
+                                                .imagenesCliente.length,
+                                            itemExtent: Get.width * 0.9 + 20,
+                                            itemBuilder: ((context, index) {
+                                              return imagen(
+                                                  '${ApiService().ruta}${controller.imagenesCliente[index]}');
+                                            }),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            imagenes(controller);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(5),
+                                            margin:
+                                                const EdgeInsets.only(top: 15),
+                                            decoration: BoxDecoration(
+                                                color: pink_,
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            child: const Text(
+                                              'Agregar mas imagenes',
+                                              style: TextStyle(
+                                                  color: whiteTheme_,
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                         ),
                         const Divider(
                           color: blackTheme_,
@@ -70,17 +141,6 @@ class PerfilTrabajadorView extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
-                        // Container(
-                        //   alignment: Alignment.topLeft,
-                        //   margin: const EdgeInsets.only(top: 20),
-                        //   child: parrafo('Imagenes de tu trabajo:'),
-                        // ),
-                        // const Divider(
-                        //   color: blackTheme_,
-                        // ),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
                         parrafo('Descripción:'),
                         Container(
                           alignment: Alignment.topLeft,
@@ -226,7 +286,6 @@ class PerfilTrabajadorView extends StatelessWidget {
                           height: 10,
                         ),
                         parrafo('Metodos de pago:'),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -347,7 +406,6 @@ class PerfilTrabajadorView extends StatelessWidget {
                                 onChanged: (value) {})
                           ],
                         ),
-
                         Row(
                           children: [
                             SizedBox(
@@ -520,7 +578,6 @@ class PerfilTrabajadorView extends StatelessWidget {
                         const SizedBox(
                           height: 20,
                         ),
-
                         Container(
                           width: Get.width,
                           padding: const EdgeInsets.all(5),
@@ -544,5 +601,109 @@ class PerfilTrabajadorView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget imagen(String ruta) {
+    return Container(
+      margin: const EdgeInsets.only(right: 20),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: Image.network(
+              ruta,
+              height: Get.height,
+              fit: BoxFit.fill,
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: whiteTheme_,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.cancel,
+                  color: blackTheme_,
+                  size: 35,
+                ),
+                onPressed: () {},
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future imagenes(PerfilTrabajadorController controller) async {
+    return Get.bottomSheet(Container(
+      height: Get.height * 0.2,
+      decoration: BoxDecoration(
+        color: whiteTheme_,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          const Text(
+            'Elija una opcion:',
+            style: TextStyle(
+                color: blackTheme_, fontSize: 21, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      await controller.pickImageFromGallery();
+                    },
+                    child: SizedBox(
+                      width: Get.width * 0.4,
+                      child: const Column(
+                        children: [
+                          Text(
+                            'Galeria',
+                            style: TextStyle(color: blackTheme_, fontSize: 19),
+                          ),
+                          Icon(
+                            Icons.photo,
+                            size: 35,
+                            color: pink_,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      await controller.pickImageFromCamera();
+                    },
+                    child: SizedBox(
+                      width: Get.width * 0.4,
+                      child: const Column(
+                        children: [
+                          Text(
+                            'Camara',
+                            style: TextStyle(color: blackTheme_, fontSize: 19),
+                          ),
+                          Icon(
+                            Icons.camera_alt_outlined,
+                            size: 35,
+                            color: pink_,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+          )
+        ],
+      ),
+    ));
   }
 }

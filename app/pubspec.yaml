@@ -49,6 +49,7 @@ dependencies:
   vector_math: ^2.1.4
   flutter_svg: ^2.0.9
   custom_radio_grouped_button: ^2.2.1
+  dropdown_search: ^5.0.6
   # smile_id: ^10.0.6
   # currency_text_input_formatter: ^2.1.10
   # face_detection: ^0.0.6
@@ -75,12 +76,12 @@ dependencies:
     sdk: flutter
 
 flutter_launcher_icons:
-  image_path: "assets/images/logos/Logo_Oficial_ZEIVOR_icono.png"
+  image_path: "assets/images/logos/logo.png"
   android: "launcher_icon"
   ios: true
   adaptive_icon_background: "#FFFFFF"
   # image_path_ios: "assets/images/logos/Logo_Oficial_ZEIVOR_icono.png"
-  adaptive_icon_foreground: "assets/images/logos/Logo_Oficial_ZEIVOR_icono.png"
+  adaptive_icon_foreground: "assets/images/logos/logo.png"
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,8 @@ import 'package:app/helpers/api.dart';
 import 'package:app/helpers/data.dart';
 import 'package:app/helpers/obtener_oficio.dart';
 import 'package:app/helpers/position.dart';
-import 'package:app/models/oficio.dart';
+import 'package:app/models/cliente.dart';
+// import 'package:app/models/oficio.dart';
 // import 'package:app/helpers/position.dart';
 import 'package:app/models/usuario.dart';
 import 'package:app/routes/app_pages.dart';
@@ -36,7 +37,7 @@ class HomeController extends GetxController {
     selectIndex.value = index;
     if (index == 1) {
       await favoritoController.buscarFavoritos();
-      print('si funciono');
+      // print('si funciono');
     }
   }
 
@@ -47,7 +48,7 @@ class HomeController extends GetxController {
   ];
 
   // Posicion? posicionController;
-  Oficio? oficio;
+  Cliente? cliente;
   @override
   void onInit() async {
     Get.put(BuscarController());
@@ -57,11 +58,13 @@ class HomeController extends GetxController {
 
     usuario = Datos().recoveryData();
     await obtenerPosicion();
-    if (usuario!.tipoUsuario == 2) {
-      oficio = await DatosOficio().datosOficio(usuario!);
-      if (oficio!.estatus == 'Validando') {
+    if (usuario!.tipoUsuario == "Cliente") {
+      cliente = await DatosCliente().datosCliente(usuario!);
+      // print(usuario!.sId);
+      if (cliente!.estatus == 'Validando') {
         snackbarOscura('Tu perfil esta en proceso de validacion', '');
       }
+      // print(cliente);
     }
     super.onInit();
   }
@@ -97,7 +100,7 @@ class HomeController extends GetxController {
         List<Placemark> place =
             await placemarkFromCoordinates(ps!.latitude, ps!.longitude);
         lugar = place[0];
-        print(place[0]);
+        // print(place[0]);
       } else {
         Get.offAllNamed(Routes.permisoUbi);
       }
@@ -143,18 +146,20 @@ class HomeController extends GetxController {
 
   Future<Uint8List> assetsIcon() async {
     String rutaImagen = '';
-    if (usuario!.tipo == 'ninguno') {
+    if (usuario!.auth == 'ninguno') {
       rutaImagen = '${ApiService().ruta}${usuario!.imagen}';
     } else {
       rutaImagen = usuario!.imagen ?? '';
     }
+
+    // print(rutaImagen);
     http.Response response = await http.get(Uri.parse(rutaImagen));
 
     ByteData bytes;
     if (response.statusCode == 200) {
       bytes = ByteData.sublistView(Uint8List.fromList(response.bodyBytes));
     } else {
-      bytes = await rootBundle.load('assets/images/logos/logo.jpg');
+      bytes = await rootBundle.load('assets/images/logos/logo.png');
     }
 
     final Uint8List list = bytes.buffer.asUint8List();

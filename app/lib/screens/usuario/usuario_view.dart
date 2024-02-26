@@ -55,37 +55,42 @@ class UsuarioView extends StatelessWidget {
                           width: 150,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(75),
-                            child: Image.network(
-                              controller.imagenPath.value,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) {
-                                  // La imagen se cargó correctamente
-                                  return child;
-                                } else if (loadingProgress
-                                        .cumulativeBytesLoaded ==
-                                    loadingProgress.expectedTotalBytes) {
-                                  // Error al cargar la imagen
-                                  return Image.asset(
-                                      'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png');
-                                } else {
-                                  // La imagen todavía se está cargando, puedes mostrar un indicador de carga si lo deseas
-                                  return const CircularProgressIndicator
-                                      .adaptive(
-                                    backgroundColor: pink_,
-                                  );
-                                }
-                              },
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
-                                // Error al cargar la imagen
-                                return Image.asset(
-                                  'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png',
-                                  scale: 7,
-                                );
-                              },
-                            ),
+                            child: controller.imagenPath.value != ''
+                                ? Image.network(
+                                    controller.imagenPath.value,
+                                    loadingBuilder: (BuildContext context,
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        // La imagen se cargó correctamente
+                                        return child;
+                                      } else if (loadingProgress
+                                              .cumulativeBytesLoaded ==
+                                          loadingProgress.expectedTotalBytes) {
+                                        // Error al cargar la imagen
+                                        return Image.asset(
+                                            'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png');
+                                      } else {
+                                        // La imagen todavía se está cargando, puedes mostrar un indicador de carga si lo deseas
+                                        return const CircularProgressIndicator
+                                            .adaptive(
+                                          backgroundColor: pink_,
+                                        );
+                                      }
+                                    },
+                                    errorBuilder: (BuildContext context,
+                                        Object error, StackTrace? stackTrace) {
+                                      // Error al cargar la imagen
+                                      return Image.asset(
+                                        'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png',
+                                        scale: 7,
+                                      );
+                                    },
+                                  )
+                                : Image.asset(
+                                    'assets/images/logos/Logo_Oficial_ZEIVOR_icono.png',
+                                    scale: 7,
+                                  ),
                           ),
                         ),
                         Positioned(
@@ -193,8 +198,8 @@ class UsuarioView extends StatelessWidget {
                             const TextStyle(color: blackTheme_, fontSize: 20),
                       ),
                     ),
-                    controller.usuario!.tipoUsuario == 2 &&
-                            controller.oficio!.estatus != 'Validando'
+                    controller.usuario!.tipoUsuario == "Cliente" &&
+                            controller.cliente!.estatus != 'Validando'
                         ? GestureDetector(
                             onTap: () async {
                               if (controller.estatus.value) {
@@ -272,8 +277,8 @@ class UsuarioView extends StatelessWidget {
                     const Divider(
                       color: blackTheme_,
                     ),
-                    controller.usuario!.tipoUsuario == 2 &&
-                            controller.oficio!.estatus != 'Validando'
+                    controller.usuario!.tipoUsuario == "Cliente" &&
+                            controller.cliente!.estatus != 'Validando'
                         ? Column(
                             children: [
                               GestureDetector(
@@ -301,15 +306,15 @@ class UsuarioView extends StatelessWidget {
                       },
                       child: SizedBox(
                         width: Get.width,
-                        child: menuPerfil('Mis Alertas', Icons.alarm),
+                        child: menuPerfil('Mis Solicitudes', Icons.alarm),
                       ),
                     ),
                     const Divider(
                       color: blackTheme_,
                     ),
 
-                    controller.usuario!.tipoUsuario == 2 &&
-                            controller.oficio!.estatus != 'Validando'
+                    controller.usuario!.tipoUsuario == "Cliente" &&
+                            controller.cliente!.estatus != 'Validando'
                         ? Column(
                             children: [
                               GestureDetector(
@@ -347,7 +352,7 @@ class UsuarioView extends StatelessWidget {
                     // const Divider(
                     //   color: blackTheme_,
                     // ),
-                    controller.usuario!.tipoUsuario == 1
+                    controller.usuario!.tipoUsuario == "Normal"
                         ? Column(
                             children: [
                               GestureDetector(
@@ -366,8 +371,8 @@ class UsuarioView extends StatelessWidget {
                             ],
                           )
                         : const SizedBox(),
-                    controller.usuario!.tipoUsuario == 2 &&
-                            controller.oficio!.estatus != 'Validando'
+                    controller.usuario!.tipoUsuario == "Cliente" &&
+                            controller.cliente!.estatus != 'Validando'
                         ? Column(
                             children: [
                               GestureDetector(

@@ -13,7 +13,10 @@ class ConfiguracionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ConfiguracionController>(
       builder: (controller) => Scaffold(
-        appBar: AppBar(),
+        backgroundColor: whiteTheme_,
+        appBar: AppBar(
+          backgroundColor: whiteTheme_,
+        ),
         body: Container(
           width: Get.width,
           margin: const EdgeInsets.only(left: 20, right: 20, top: 10),

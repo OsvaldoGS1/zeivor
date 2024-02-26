@@ -15,7 +15,10 @@ class EnviarMensaje extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<DetallesController>(builder: (controller) {
       return Scaffold(
-        appBar: AppBar(elevation: 0),
+        appBar: AppBar(
+          elevation: 0,
+          title: titulo('${controller.cliente.profesion}'),
+        ),
         body: Obx(
           () => controller.hizoContacto.value
               ? Center(
@@ -33,10 +36,13 @@ class EnviarMensaje extends StatelessWidget {
                             left: 30,
                             right: 30,
                           ),
-                          child: parrafoConfirmacion(controller.tipo.value ==
-                                  'favorito'
-                              ? 'Ha sido notificado ${controller.oficio.value.nombre} de que requieres de sus servicios de ${controller.oficio.value.profesion}'
-                              : 'Ha sido notificado ${controller.profesion.value.nombre} de que requieres de sus servicios de ${controller.profesion.value.profesion}'))
+                          child: parrafoConfirmacion(
+                              'Ha sido notificado ${controller.cliente.usuario!.nombre} de que requieres de sus servicios de ${controller.cliente.profesion}'
+                              // controller.tipo.value ==
+                              //       'favorito'
+                              //   ? 'Ha sido notificado ${controller.oficio.value.nombre} de que requieres de sus servicios de ${controller.oficio.value.profesion}'
+                              //   : 'Ha sido notificado ${controller.profesion.value.nombre} de que requieres de sus servicios de ${controller.profesion.value.profesion}'
+                              ))
                     ],
                   ),
                 )
@@ -48,12 +54,12 @@ class EnviarMensaje extends StatelessWidget {
                         Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              controller.tipo.value == 'favorito'
-                                  ? '${controller.oficio.value.nombre} ${controller.oficio.value.apellidoP}'
-                                  : '${controller.profesion.value.nombre} ${controller.profesion.value.apellidoP}',
+                              // controller.tipo.value == 'favorito'
+                              '${controller.cliente.usuario!.nombre ?? ''} ${controller.cliente.usuario!.apellidoP ?? ''}',
+                              // : '${controller.profesion.value.nombre} ${controller.profesion.value.apellidoP}',
                               style: const TextStyle(
                                   color: blackTheme_,
-                                  fontSize: 23,
+                                  fontSize: 21,
                                   fontWeight: FontWeight.bold),
                             )),
                         Container(
@@ -61,10 +67,11 @@ class EnviarMensaje extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
-                              controller.tipo.value == 'favorito'
-                                  ? '${ApiService().ruta}${controller.oficio.value.imagen}'
-                                  : '${ApiService().ruta}${controller.profesion.value.imagen}',
-                              width: Get.width * 0.5,
+                              '${ApiService().ruta}${controller.cliente.imagen}',
+                              // controller.tipo.value == 'favorito'
+                              //     ? '${ApiService().ruta}${controller.oficio.value.imagen}'
+                              //     : '${ApiService().ruta}${controller.profesion.value.imagen}',
+                              width: Get.width * 0.7,
                               scale: 1,
                             ),
                           ),
@@ -102,9 +109,6 @@ class EnviarMensaje extends StatelessWidget {
                               ),
                             ),
                             onPressed: () async {
-                              // final homeController = Get.put(HomeController());
-                              // await controller.contacto(homeController.ps);
-                              // Get.toNamed(Routes.contacto);
                               await controller.enviarMensaje();
                             },
                           ),

@@ -36,7 +36,7 @@ class LoginController extends GetxController {
   void obtenerUsuario() {
     datos.checkLogin();
     usuario = datos.recoveryData();
-    if (usuario != null && usuario!.tipo == 'ninguno') {
+    if (usuario != null && usuario!.auth == 'ninguno') {
       correo.text = usuario!.correo ?? '';
     }
   }
@@ -60,13 +60,13 @@ class LoginController extends GetxController {
       };
       final respuesta = await apiService.fetchData('usuario/login',
           method: Method.POST, body: body);
-
+      // print(respuesta);
       if (apiService.status == 200) {
         Datos datos = Datos();
         datos.logOut();
-        datos.login(respuesta['resultado']);
+        datos.login(respuesta['usuario']);
         Usuario user = datos.recoveryData();
-        if (user.tipoUsuario == 3) {
+        if (user.tipoUsuario == "Admin") {
           await Get.offAllNamed(Routes.adminstrador);
         } else {
           await Get.offAllNamed(Routes.home);
@@ -76,6 +76,7 @@ class LoginController extends GetxController {
       }
     } catch (error) {
       snackbar('Error', error.toString());
+      print(error);
     }
     isLoading.value = false;
   }

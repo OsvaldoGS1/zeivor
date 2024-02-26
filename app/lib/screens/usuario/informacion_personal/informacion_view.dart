@@ -73,7 +73,7 @@ class InformacionView extends StatelessWidget {
                 // Container(
                 //     margin: const EdgeInsets.only(bottom: 10),
                 //     child: input('Contraseña', controller.password)),
-                controller.usuario.tipo == 'ninguno'
+                controller.usuario.auth == 'ninguno'
                     ? Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: Column(

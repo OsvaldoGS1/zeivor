@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-// const usuarioScheme = require("../models/usuario.model.js");
 
-const oficioScheme = mongoose.Schema({
+const clienteSchema = mongoose.Schema({
   usuario: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "usuarios",
     required: true,
+    index: true,
   },
   profesion: { type: String, required: true, index: true },
   descripcion: { type: String, required: true },
@@ -16,8 +16,9 @@ const oficioScheme = mongoose.Schema({
   },
   celular: { type: String, required: true },
   ubicacion: { type: String, required: true },
-  imagen: { type: String, required: true },
+  imagen: { type: String, required: false },
   visita_cobro: { type: String, required: true },
+  emite_factura: { type: Boolean, required: false, default: false },
   direccion: {
     calle: { type: String },
     cp: { type: Number },
@@ -28,19 +29,29 @@ const oficioScheme = mongoose.Schema({
     visible: { type: Boolean },
   },
   imagenes_trabajo: { type: [{ type: String }], required: false },
-  identificacion: { type: String, required: true },
-  selfie: { type: String, required: true },
+  identificacion: { type: String, required: false },
+  selfie: { type: String, required: false },
   carta_penal: { type: String, required: false },
   referencia: { type: [{ type: String }], required: true },
-  palabras_claves: { type: [{ type: String }], required: true },
+  calificacion: { type: Number, default: 0 },
+  palabras_claves: { type: [{ type: String }], required: false },
+
+  opiniones: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "opiniones" }],
+    required: false,
+    default: [],
+  },
+
   estatus: {
     type: String,
     enum: ["Activo", "Inactivo", "Rechazado"],
+    default: "Inactivo",
     index: true,
   },
   verificado: {
     type: Boolean,
     default: false,
+    index: true,
   },
   fecha_vencimiento: {
     type: Date,
@@ -49,6 +60,4 @@ const oficioScheme = mongoose.Schema({
   },
 });
 
-// const
-
-module.exports = mongoose.model("oficios", oficioScheme);
+module.exports = mongoose.model("clientes", clienteSchema);

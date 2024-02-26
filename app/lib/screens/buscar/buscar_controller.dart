@@ -2,6 +2,7 @@ import 'package:app/config/theme.dart';
 import 'package:app/helpers/api.dart';
 import 'package:app/helpers/data.dart';
 import 'package:app/helpers/position.dart';
+import 'package:app/models/cliente.dart';
 
 import 'package:app/models/profesionista_disponibles.dart';
 import 'package:app/models/usuario.dart';
@@ -41,32 +42,33 @@ class BuscarController extends GetxController {
   RxString respuestaAPI2 = ''.obs;
   RxBool isloading = false.obs;
 
-  RxList<ProfesionistasDisponibles> resultados =
-      <ProfesionistasDisponibles>[].obs;
+  // RxList<ProfesionistasDisponibles> resultados =
+  // <ProfesionistasDisponibles>[].obs;
+
+  RxList<Cliente> resultados = <Cliente>[].obs;
 
   Future buscar() async {
     isloading.value = true;
     try {
       resultados.clear();
       ApiService apiService = ApiService();
-      String ruta = buscador.text;
-      String lat = '';
-      String lon = '';
-      if (ubicacionBusqueda != null) {
-        lat = ubicacionBusqueda!.latitude.toStringAsFixed(6);
-        lon = ubicacionBusqueda!.longitude.toStringAsFixed(6);
-      } else {
-        Posicion posicionController = Get.find();
-        ps = posicionController.lugar;
-        lat = ps!.latitude.toStringAsFixed(2);
-        lon = ps!.longitude.toStringAsFixed(2);
-      }
-      final respuesta = await apiService.fetchData(
-          'busqueda/resultado/${usuario!.idUsuario}/$ruta/$lat/$lon',
-          method: Method.GET);
+      String busqueda = buscador.text;
+      // String lat = '';
+      // String lon = '';
+      // if (ubicacionBusqueda != null) {
+      //   lat = ubicacionBusqueda!.latitude.toStringAsFixed(6);
+      //   lon = ubicacionBusqueda!.longitude.toStringAsFixed(6);
+      // } else {
+      //   Posicion posicionController = Get.find();
+      //   ps = posicionController.lugar;
+      //   lat = ps!.latitude.toStringAsFixed(2);
+      //   lon = ps!.longitude.toStringAsFixed(2);
+      // }
+      final respuesta = await apiService
+          .fetchData('busqueda/${usuario!.sId}/$busqueda', method: Method.GET);
 
       if (apiService.status == 200) {
-        resultados.value = ProfesionistasDisponibles.fromJsonList(respuesta);
+        resultados.value = Cliente.fromJsonList(respuesta);
       } else {
         respuestaAPI2.value = respuesta['message'];
       }
@@ -161,7 +163,7 @@ class BuscarController extends GetxController {
       ApiService apiService = ApiService();
 
       Map<String, dynamic> body = {
-        "usuario": usuario!.idUsuario,
+        "usuario": usuario!.sId,
         "trabajo": buscadorAlerta.text,
         "descripcion":
             descripcion.text.isNotEmpty ? descripcion.text : 'Sin descripcion',

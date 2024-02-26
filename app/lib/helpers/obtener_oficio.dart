@@ -1,19 +1,21 @@
 import 'package:app/helpers/api.dart';
+import 'package:app/models/cliente.dart';
 import 'package:app/models/oficio.dart';
 import 'package:app/models/usuario.dart';
 import 'package:flutter/foundation.dart';
 
-class DatosOficio {
-  Future<Oficio?> datosOficio(Usuario user) async {
-    Oficio? oficio;
+class DatosCliente {
+  Future<Cliente?> datosCliente(Usuario user) async {
+    Cliente? cliente;
     try {
       ApiService apiService = ApiService();
-      final response = await apiService.fetchData('profesionista/obtener',
-          method: Method.POST, body: {"usuario": user.idUsuario});
+      final response = await apiService.fetchData('cliente/obtener',
+          method: Method.POST, body: {"usuario": user.sId});
+
       if (apiService.status == 200) {
-        oficio = Oficio.fromJson(response[0]);
+        cliente = Cliente.fromJson(response);
       }
-      return oficio;
+      return cliente;
     } catch (error) {
       if (kDebugMode) {
         print(error);

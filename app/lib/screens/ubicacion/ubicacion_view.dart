@@ -71,7 +71,7 @@ class UbicacionView extends StatelessWidget {
                     ),
                     SizedBox(
                       child: parrafoConfirmacion(
-                          '${controller.oferta.nombre} ${controller.oferta.apellidoP ?? ''}, te espera para contratar tus servicios.'),
+                          '${controller.oferta.solicitante!.nombre} ${controller.oferta.solicitante!.apellidoP ?? ''}, te espera para contratar tus servicios.'),
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 20),
@@ -91,8 +91,8 @@ class UbicacionView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    controller.oferta.estatusTrabajador == 'Terminado'
-                        ? controller.oferta.estatusCliente == 'En proceso'
+                    controller.oferta.estatusCliente == 'Terminado'
+                        ? controller.oferta.estatusSolicitante == 'En proceso'
                             ? Container(
                                 margin: const EdgeInsets.only(top: 20),
                                 child: Row(
@@ -300,7 +300,7 @@ class UbicacionView extends StatelessWidget {
                                     color: blackTheme_,
                                   ),
                                   title: parrafo(
-                                      'Nombre: ${controller.oferta.nombre} ${controller.oferta.apellidoP ?? ''} ${controller.oferta.apellidoM ?? ''}'
+                                      'Nombre: ${controller.oferta.solicitante!.nombre} ${controller.oferta.solicitante!.apellidoP ?? ''} ${controller.oferta.solicitante!.apellidoM ?? ''}'
                                           .toUpperCase()),
                                 ),
                               ),
@@ -316,7 +316,7 @@ class UbicacionView extends StatelessWidget {
                                       color: blackTheme_,
                                     ),
                                     title: parrafo(
-                                        'Telefono: ${controller.oferta.telefono ?? 'Sin numero de telefono'}'),
+                                        'Telefono: ${controller.oferta.solicitante!.telefono ?? 'Sin numero de telefono'}'),
                                   ),
                                 ),
                               ),
@@ -329,7 +329,7 @@ class UbicacionView extends StatelessWidget {
                                   child: ListTile(
                                       leading: const Icon(Icons.email),
                                       title: parrafo(
-                                          'Correo: ${controller.oferta.correo ?? 'Sin correo electronico'} ')),
+                                          'Correo: ${controller.oferta.solicitante!.correo ?? 'Sin correo electronico'} ')),
                                 ),
                               ),
                               titulo('Dirección'),

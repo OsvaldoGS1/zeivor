@@ -1,11 +1,13 @@
 import 'package:app/config/theme.dart';
 import 'package:app/helpers/api.dart';
-import 'package:app/models/favorito.dart';
+import 'package:app/models/cliente.dart';
+// import 'package:app/models/favorito.dart';
 import 'package:app/routes/app_pages.dart';
 // import 'package:app/models/profesionista_disponibles.dart';
 // import 'package:app/screens/buscar/buscar_controller.dart';
 import 'package:app/screens/favoritos/favoritos_controller.dart';
 import 'package:app/widgets/estrellas.dart';
+// import 'package:app/widgets/estrellas.dart';
 import 'package:app/widgets/textos.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,61 +38,14 @@ class FavoritosView extends StatelessWidget {
             ),
             SizedBox(
               child: parrafo(
-                  'Hola ${controller.usuario!.nombre}, estos son los ultimos trabajos que has solicitado:'),
+                  'Hola ${controller.usuario!.nombre}, estos son trabajos favoritos de tu cuenta:'),
             ),
-            // Container(
-            //   width: Get.width,
-            //   alignment: Alignment.topLeft,
-            //   margin: const EdgeInsets.only(top: 15),
-            //   child:
-            //   Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //       children: [
-            //         const Text(
-            //           'Ordenar por:',
-            //           style: TextStyle(color: blackTheme_),
-            //         ),
-            // Container(
-            //   // width: Get.width * 0.5,
-            //   decoration: BoxDecoration(
-            //       color: whiteTheme_,
-            //       borderRadius: BorderRadius.circular(5)),
-            //   padding: const EdgeInsets.only(left: 10, right: 10),
-            //   alignment: Alignment.center,
-            //   child: Obx(
-            //     () => DropdownButton(
-            //       items: const [
-            //         DropdownMenuItem(
-            //           value: 0,
-            //           child: Text('5 mas recientes'),
-            //         ),
-            //         DropdownMenuItem(
-            //           value: 1,
-            //           child: Text('Favoritos'),
-            //         ),
-            //       ],
-            //       onChanged: (value) {
-            //         controller.valorDrop.value =
-            //             int.parse(value.toString());
-            //       },
-            //       value: controller.valorDrop.value,
-            //       icon: const Icon(Icons.arrow_drop_down_rounded),
-            //       iconSize: 30,
-            //       underline: Container(),
-            //       style: const TextStyle(
-            //           color: blackTheme_,
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: 17),
-            //     ),
-            //   ),
-            // )
-            // ]),
-            // ),
-            // ListView.builder(itemBuilder: (context, index) {},)
             Obx(
               () => controller.isloading.value
                   ? const Center(
-                      child: CircularProgressIndicator.adaptive(),
+                      child: CircularProgressIndicator.adaptive(
+                        backgroundColor: pink_,
+                      ),
                     )
                   : controller.lista.isEmpty
                       ? Container(
@@ -114,7 +69,7 @@ class FavoritosView extends StatelessWidget {
     );
   }
 
-  Widget tarjeta(Favorito favorito, FavoritosController controller) {
+  Widget tarjeta(Cliente favorito, FavoritosController controller) {
     return Stack(children: [
       Container(
         margin: EdgeInsets.only(bottom: Get.height * 0.09),
@@ -173,7 +128,7 @@ class FavoritosView extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 margin: const EdgeInsets.only(top: 5),
                 child: Text(
-                  '${favorito.profesion} ${favorito.nombre}',
+                  '${favorito.profesion} ${favorito.usuario!.nombre}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 19),
                 ),
@@ -189,7 +144,7 @@ class FavoritosView extends StatelessWidget {
                         child: StarRating(
                             double.parse(favorito.calificacion.toString()))),
                     Text(
-                      '${favorito.calificacion}',
+                      favorito.calificacion.toString(),
                       style: const TextStyle(color: blackTheme_, fontSize: 17),
                     ),
                   ],
@@ -216,8 +171,7 @@ class FavoritosView extends StatelessWidget {
                             fontSize: 17),
                       ),
                       onPressed: () {
-                        Get.toNamed(Routes.detalles,
-                            arguments: ['favorito', favorito]);
+                        Get.toNamed(Routes.detalles, arguments: favorito);
                         // final con = Get.put(BuscarController());
                         // controller.irDetalles(favorito);
                       },
@@ -239,7 +193,7 @@ class FavoritosView extends StatelessWidget {
                             ),
                             onPressed: () async {
                               await Get.toNamed(Routes.mensaje,
-                                  arguments: ['favorito', favorito]);
+                                  arguments: favorito);
                               // controller.irMensaje(oficio);
                               // final con = Get.put(BuscarController());
                               // con.irMensaje(oficio);

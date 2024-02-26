@@ -1,5 +1,6 @@
 import 'package:app/helpers/api.dart';
 import 'package:app/models/oferta.dart';
+import 'package:app/models/solicitud.dart';
 import 'package:app/widgets/snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
@@ -9,7 +10,7 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UbicacionController extends GetxController {
-  Oferta oferta = Get.arguments;
+  Solicitud oferta = Get.arguments;
   CameraPosition? initialCameraPosition;
   List coordenadas = [];
   LatLng? posicion;
@@ -50,7 +51,7 @@ class UbicacionController extends GetxController {
   Future launchMapa(AvailableMap map) async {
     await map.showMarker(
       coords: Coords(posicion!.latitude, posicion!.longitude),
-      title: '${oferta.nombre}',
+      title: '${oferta.solicitante!.nombre}',
     );
   }
 
@@ -72,7 +73,7 @@ class UbicacionController extends GetxController {
   Future terminarTrabajo() async {
     try {
       ApiService apiService = ApiService();
-      Map<String, dynamic> body = {"contrato": oferta.idContacto};
+      Map<String, dynamic> body = {"contrato": oferta.sId};
 
       final respuesta = await apiService.fetchData(
           'contratos/aceptar/trabajador',

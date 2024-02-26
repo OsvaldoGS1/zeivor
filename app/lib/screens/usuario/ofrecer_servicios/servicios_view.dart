@@ -5,7 +5,6 @@ import 'package:app/routes/app_pages.dart';
 import 'package:app/screens/usuario/ofrecer_servicios/terminos/input_fromatter.dart';
 import 'package:app/screens/usuario/ofrecer_servicios/servicios_controller.dart';
 import 'package:app/widgets/textos.dart';
-// import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,112 +26,43 @@ class OfrecerServiciosView extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Column(children: [
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  'Escribe tu profesión:',
-                  style: TextStyle(
-                      color: blackTheme_,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 19),
-                ),
+              textoInput('Escribe tu profesión:'),
+              inputs('Profesion', 20, 1),
+              textoInput('Palabras claves:'),
+              Row(
+                children: [
+                  parrafoAuto('1.   '),
+                  Flexible(child: inputs('Palabra clave', 20, 1)),
+                ],
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(top: 20),
-                decoration: const BoxDecoration(color: whiteTheme_),
-                child: TextFormField(
-                  maxLength: 20,
-                  decoration: InputDecoration(
-                    hintText: 'Profesión',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
+              Row(
+                children: [
+                  parrafoAuto('2.   '),
+                  Flexible(child: inputs('Palabra clave', 20, 1)),
+                ],
               ),
-              Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  'Imagen descriptiva:',
-                  style: TextStyle(
-                      color: blackTheme_,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 19),
-                ),
+              Row(
+                children: [
+                  parrafoAuto('3.   '),
+                  Flexible(child: inputs('Palabra clave', 20, 1)),
+                ],
               ),
+              Row(
+                children: [
+                  parrafoAuto('4.   '),
+                  Flexible(child: inputs('Palabra clave', 20, 1)),
+                ],
+              ),
+              Row(
+                children: [
+                  parrafoAuto('5.   '),
+                  Flexible(child: inputs('Palabra clave', 20, 1)),
+                ],
+              ),
+              textoInput('Imagen descriptiva:'),
               GestureDetector(
                 onTap: () {
-                  Get.bottomSheet(Container(
-                    height: Get.height * 0.2,
-                    decoration: BoxDecoration(
-                        color: whiteTheme_,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Elija una opcion:',
-                          style: TextStyle(
-                              color: blackTheme_,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.imagenfromGaleriaa();
-                                  },
-                                  child: SizedBox(
-                                    width: Get.width * 0.4,
-                                    child: const Column(
-                                      children: [
-                                        Text(
-                                          'Galeria',
-                                          style: TextStyle(
-                                              color: blackTheme_, fontSize: 19),
-                                        ),
-                                        Icon(
-                                          Icons.photo,
-                                          size: 35,
-                                          color: pink_,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    controller.imagefromCamara();
-                                  },
-                                  child: SizedBox(
-                                    width: Get.width * 0.4,
-                                    child: const Column(
-                                      children: [
-                                        Text(
-                                          'Camara',
-                                          style: TextStyle(
-                                              color: blackTheme_, fontSize: 19),
-                                        ),
-                                        Icon(
-                                          Icons.camera_alt_outlined,
-                                          size: 35,
-                                          color: pink_,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ]),
-                        )
-                      ],
-                    ),
-                  ));
+                  camaras(controller);
                 },
                 child: Container(
                   margin: const EdgeInsets.only(top: 10),
@@ -170,33 +100,8 @@ class OfrecerServiciosView extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  'Descripción: ',
-                  style: TextStyle(
-                      color: blackTheme_,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 19),
-                ),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(top: 20),
-                decoration: const BoxDecoration(color: whiteTheme_),
-                child: TextFormField(
-                  maxLength: 200,
-                  maxLines: 7,
-                  controller: controller.descripcion,
-                  decoration: InputDecoration(
-                    hintText: 'Descripción',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                ),
-              ),
+              textoInput('Descripción: '),
+              inputs('Descripcion', 200, 7),
               Container(
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 20),
@@ -283,42 +188,23 @@ class OfrecerServiciosView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    textoInput('Emite facturas: '),
                     Container(
-                      alignment: Alignment.topLeft,
-                      child: const Text(
-                        'Emite facturas: ',
-                        style: TextStyle(
-                            color: blackTheme_,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 19),
+                      margin: const EdgeInsets.only(left: 15, top: 20),
+                      child: Obx(
+                        () => CupertinoSwitch(
+                            value: controller.emiteFacturas.value,
+                            activeColor: pink_,
+                            onChanged: (value) {
+                              controller.emiteFacturas.value =
+                                  !controller.emiteFacturas.value;
+                            }),
                       ),
-                    ),
-                    // Container(
-                    //   margin: const EdgeInsets.only(left: 15),
-                    //   child: Obx(
-                    //     () => CupertinoSwitch(
-                    //         value: false,
-                    //         activeColor: pink_,
-                    //         onChanged: (value) {
-                    //           // controller.cobroVisita.value =
-                    //           //     !controller.cobroVisita.value;
-                    //         }),
-                    //   ),
-                    // )
+                    )
                   ],
                 ),
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  'Celular',
-                  style: TextStyle(
-                      color: blackTheme_,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 19),
-                ),
-              ),
+              textoInput('Celular'),
               Container(
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 20),
@@ -337,17 +223,7 @@ class OfrecerServiciosView extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  'Numeros de refencia',
-                  style: TextStyle(
-                      color: blackTheme_,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 19),
-                ),
-              ),
+              textoInput('Numeros de referencia'),
               Container(
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 20),
@@ -407,18 +283,9 @@ class OfrecerServiciosView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    textoInput('Costo por visita:'),
                     Container(
-                      alignment: Alignment.topLeft,
-                      child: const Text(
-                        'Costo por visita:',
-                        style: TextStyle(
-                            color: blackTheme_,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 19),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
+                      margin: const EdgeInsets.only(left: 15, top: 20),
                       child: Obx(
                         () => CupertinoSwitch(
                             value: controller.cobroVisita.value,
@@ -497,5 +364,89 @@ class OfrecerServiciosView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget inputs(String titulo, int longitud, int? lineas) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.only(top: 20),
+      decoration: const BoxDecoration(color: whiteTheme_),
+      child: TextFormField(
+        maxLength: longitud,
+        maxLines: lineas,
+        decoration: InputDecoration(
+          hintText: titulo,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future camaras(controller) {
+    return Get.bottomSheet(Container(
+      height: Get.height * 0.2,
+      decoration: BoxDecoration(
+          color: whiteTheme_, borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        children: [
+          const Text(
+            'Elija una opcion:',
+            style: TextStyle(
+                color: blackTheme_, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      controller.imagenfromGaleriaa();
+                    },
+                    child: SizedBox(
+                      width: Get.width * 0.4,
+                      child: const Column(
+                        children: [
+                          Text(
+                            'Galeria',
+                            style: TextStyle(color: blackTheme_, fontSize: 19),
+                          ),
+                          Icon(
+                            Icons.photo,
+                            size: 35,
+                            color: pink_,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      controller.imagefromCamara();
+                    },
+                    child: SizedBox(
+                      width: Get.width * 0.4,
+                      child: const Column(
+                        children: [
+                          Text(
+                            'Camara',
+                            style: TextStyle(color: blackTheme_, fontSize: 19),
+                          ),
+                          Icon(
+                            Icons.camera_alt_outlined,
+                            size: 35,
+                            color: pink_,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+          )
+        ],
+      ),
+    ));
   }
 }

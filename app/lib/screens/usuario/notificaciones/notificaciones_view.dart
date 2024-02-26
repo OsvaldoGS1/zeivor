@@ -1,7 +1,9 @@
 import 'package:app/config/theme.dart';
 import 'package:app/helpers/api.dart';
 import 'package:app/helpers/formatos.dart';
+import 'package:app/models/cliente.dart';
 import 'package:app/models/oferta.dart';
+import 'package:app/models/solicitud.dart';
 import 'package:app/routes/app_pages.dart';
 import 'package:app/screens/usuario/notificaciones/notificaciones_controller.dart';
 import 'package:app/widgets/textos.dart';
@@ -66,6 +68,7 @@ class NotificacionesView extends StatelessWidget {
                                         controller.ps
                                       ]);
                                 }
+                                // print(controller.ofertas[index].estatus);
                               },
                               child:
                                   noti(controller.ofertas[index], controller),
@@ -81,14 +84,14 @@ class NotificacionesView extends StatelessWidget {
     );
   }
 
-  Widget noti(Oferta oferta, NotificacionesController controller) {
+  Widget noti(Solicitud oferta, NotificacionesController controller) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10, top: 10),
       child: ListTile(
         leading: CircleAvatar(
-            backgroundImage: NetworkImage(oferta.tipo == 'ninguno'
-                ? '${ApiService().ruta}${oferta.imagen}'
-                : '${oferta.imagen}')),
+            backgroundImage: NetworkImage(oferta.solicitante!.auth == 'ninguno'
+                ? '${ApiService().ruta}${oferta.solicitante!.imagen}'
+                : '${oferta.solicitante!.imagen}')),
         // ClipRRect(
         //   borderRadius: BorderRadius.circular(50),
         //   child: Image.asset('assets/images/logos/user.jpg'),
@@ -96,7 +99,8 @@ class NotificacionesView extends StatelessWidget {
         title: Container(
           alignment: Alignment.center,
           child: Text(
-            '${oferta.nombre} ${oferta.apellidoP ?? ''}'.toUpperCase(),
+            '${oferta.solicitante!.nombre} ${oferta.solicitante!.apellidoP ?? ''}'
+                .toUpperCase(),
             style: const TextStyle(
                 color: blackTheme_, fontWeight: FontWeight.bold),
           ),

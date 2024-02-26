@@ -4,11 +4,13 @@ import 'dart:io';
 import 'package:app/config/theme.dart';
 import 'package:app/helpers/data.dart';
 import 'package:app/helpers/obtener_oficio.dart';
-import 'package:app/helpers/position.dart';
-import 'package:app/models/oficio.dart';
+import 'package:app/models/cliente.dart';
+// import 'package:app/helpers/position.dart';
+// import 'package:app/models/oficio.dart';
 import 'package:app/models/usuario.dart';
+import 'package:app/widgets/snackbar.dart';
 import 'package:flutter/foundation.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,29 +24,34 @@ class UsuarioController extends GetxController {
   // Position? ps; // = Get.arguments;
 
   RxBool estatus = true.obs;
-  Oficio? oficio;
+  Cliente? cliente;
   RxBool isloading = false.obs;
 
   @override
   void onInit() async {
     isloading.value = true;
     usuario = Datos().recoveryData();
-    imagenPath.value = obtenerRuta();
-    if (usuario!.tipoUsuario == 2) {
-      oficio = await DatosOficio().datosOficio(usuario!);
-      if (oficio!.estatus == 'Activo') {
+
+    if (usuario!.tipoUsuario == "Cliente") {
+      cliente = await DatosCliente().datosCliente(usuario!);
+      if (cliente!.estatus == 'Activo') {
         estatus.value = true;
       } else {
         estatus.value = false;
       }
+      if (cliente!.estatus == 'Validando') {
+        snackbarOscura('Tu perfil esta en proceso de validacion', '');
+      }
     }
+    imagenPath.value = obtenerRuta();
     isloading.value = false;
     super.onInit();
   }
 
   String obtenerRuta() {
     String rutaImagen = '';
-    if (usuario!.tipo == 'ninguno') {
+    print(usuario!.imagen);
+    if (usuario!.auth == 'ninguno') {
       rutaImagen = '${ApiService().ruta}${usuario!.imagen}';
     } else {
       rutaImagen = usuario!.imagen ?? '';
@@ -115,7 +122,7 @@ class UsuarioController extends GetxController {
     try {
       var request = http.MultipartRequest('POST', url);
 
-      request.fields['usuario'] = usuario!.idUsuario.toString();
+      request.fields['usuario'] = usuario!.sId.toString();
       if (imagenCircular.isNotEmpty) {
         File img = File(imagenCircular.value);
         http.ByteStream stream =
@@ -138,7 +145,6 @@ class UsuarioController extends GetxController {
         Datos datos = Datos();
         datos.logOut();
         datos.login(jsonMap['usuario']);
-        // await Get.offAllNamed(Routes.home);
       } else {
         Get.back();
         final mensaje = jsonDecode(respuesta.body);
@@ -152,24 +158,21 @@ class UsuarioController extends GetxController {
     }
   }
 
-  //estatus del usuario
-
   Future cambiarEstatus() async {
     try {
-      // Usuarios user = usuario!;
       Map<String, dynamic> body = {
-        "oficio": oficio!.idOficio,
+        "cliente": cliente!.sId,
         "estatus": estatus.value ? 'Inactivo' : 'Activo'
       };
       ApiService apiService = ApiService();
 
-      await apiService.fetchData('profesionista/estatus',
+      await apiService.fetchData('cliente/estatus',
           method: Method.POST, body: body);
       if (apiService.status == 200) {
-        oficio = await DatosOficio().datosOficio(usuario!);
+        cliente = await DatosCliente().datosCliente(usuario!);
       }
       // print(oficio);
-      if (oficio!.estatus == 'Activo') {
+      if (cliente!.estatus == 'Activo') {
         estatus.value = true;
       } else {
         estatus.value = false;
