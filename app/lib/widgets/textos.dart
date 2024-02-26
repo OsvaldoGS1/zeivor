@@ -23,7 +23,7 @@ Widget parrafo(String texto) {
   return Text(
     texto,
     textAlign: TextAlign.start,
-    style: const TextStyle(color: blackTheme_, fontSize: 17),
+    style: const TextStyle(color: blackTheme_, fontSize: 18),
   );
 }
 
@@ -38,13 +38,39 @@ Widget parrafoConfirmacion(String texto) {
 Widget parrafoAuto(String titulo) {
   return AutoSizeText(
     titulo,
-    minFontSize: 15,
+    minFontSize: 16,
     maxLines: 3,
     textAlign: TextAlign.justify,
     overflow: TextOverflow.ellipsis,
     maxFontSize: 23,
     style: const TextStyle(
       color: blackTheme_,
+    ),
+  );
+}
+
+Widget parrafoAutoCenter(String titulo) {
+  return AutoSizeText(
+    titulo,
+    minFontSize: 15,
+    maxLines: 3,
+    textAlign: TextAlign.center,
+    overflow: TextOverflow.ellipsis,
+    maxFontSize: 23,
+    style: const TextStyle(
+      color: blackTheme_,
+    ),
+  );
+}
+
+Widget textoInput(String titulo) {
+  return Container(
+    alignment: Alignment.center,
+    margin: const EdgeInsets.only(top: 20),
+    child: Text(
+      titulo,
+      style: const TextStyle(
+          color: blackTheme_, fontWeight: FontWeight.w500, fontSize: 19),
     ),
   );
 }

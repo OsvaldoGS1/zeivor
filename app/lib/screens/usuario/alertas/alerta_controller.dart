@@ -20,7 +20,7 @@ class AlertaController extends GetxController {
     try {
       ApiService apiService = ApiService();
 
-      Map<String, dynamic> body = {"usuario": usuario!.idUsuario};
+      Map<String, dynamic> body = {"usuario": usuario!.sId};
 
       final respuesta = await apiService.fetchData('alerta/usuario',
           method: Method.POST, body: body);

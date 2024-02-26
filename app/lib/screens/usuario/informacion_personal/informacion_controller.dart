@@ -24,20 +24,27 @@ class InformacionController extends GetxController {
   RxBool isPass = true.obs;
 
   void llenarTextField() {
-    if (usuario.tipo == 'ninguno') {
-      nombre.text = usuario.nombre.toString();
-      apellido.text = usuario.apellidoP.toString();
-      apellidoM.text = usuario.apellidoM.toString();
-      correo.text = usuario.correo.toString();
-      telefono.text = usuario.telefono.toString();
-      password.text = pass();
-    } else {
-      nombre.text = usuario.nombre.toString();
-      apellido.text = usuario.apellidoP ?? '';
-      apellidoM.text = usuario.apellidoM ?? '';
-      correo.text = usuario.correo.toString();
-      telefono.text = usuario.telefono ?? '';
-    }
+    // if (usuario. == 'ninguno') {
+    //   nombre.text = usuario.nombre.toString();
+    //   apellido.text = usuario.apellidoP.toString();
+    //   apellidoM.text = usuario.apellidoM.toString();
+    //   correo.text = usuario.correo.toString();
+    //   telefono.text = usuario.telefono.toString();
+    //   password.text = pass();
+    // } else {
+    //   nombre.text = usuario.nombre.toString();
+    //   apellido.text = usuario.apellidoP ?? '';
+    //   apellidoM.text = usuario.apellidoM ?? '';
+    //   correo.text = usuario.correo.toString();
+    //   telefono.text = usuario.telefono ?? '';
+    // }
+
+    nombre.text = usuario.nombre.toString();
+    apellido.text = usuario.apellidoP ?? "";
+    apellidoM.text = usuario.apellidoM ?? "";
+    correo.text = usuario.correo ?? "";
+    telefono.text = usuario.telefono ?? "";
+    password.text = usuario.password!.isNotEmpty ? pass() : "";
   }
 
   String pass() {

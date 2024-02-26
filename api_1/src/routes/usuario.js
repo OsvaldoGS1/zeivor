@@ -1,5 +1,5 @@
 const Router = require("express");
-const cliente = require("../config/db.js");
+// const cliente = require("../config/db.js");
 const {
   //   pruebaConection,
   registro,

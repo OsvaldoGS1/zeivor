@@ -5,7 +5,7 @@ import 'package:app/widgets/calificar.dart';
 import 'package:app/widgets/cancelar.dart';
 import 'package:app/widgets/estrellas.dart';
 import 'package:app/widgets/incidente.dart';
-import 'package:app/widgets/opinion.dart';
+
 import 'package:app/widgets/textos.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +23,7 @@ class InformacionContratacionView extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                titulo('${controller.contrato!.profesion}'),
+                titulo('${controller.solicitud!.cliente!.profesion}'),
                 Row(
                   children: [
                     Padding(
@@ -33,9 +33,10 @@ class InformacionContratacionView extends StatelessWidget {
                             Colors.transparent, // Color de fondo transparente
                         radius: 50, // Tamaño del círculo
                         backgroundImage: NetworkImage(
-                          controller.contrato!.tipo == 'ninguno'
-                              ? '${ApiService().ruta}${controller.contrato!.usuarioImagen}'
-                              : '${controller.contrato!.usuarioImagen}',
+                          controller.solicitud!.cliente!.usuario!.auth ==
+                                  'ninguno'
+                              ? '${ApiService().ruta}${controller.solicitud!.cliente!.usuario!.imagen}'
+                              : '${controller.solicitud!.cliente!.usuario!.imagen}',
                         ),
                       ),
                     ),
@@ -43,16 +44,16 @@ class InformacionContratacionView extends StatelessWidget {
                       child: Column(
                         children: [
                           parrafo(
-                              '${controller.contrato!.nombre} ${controller.contrato!.apellidoP ?? ''} ${controller.contrato!.apellidoM ?? ''}'
+                              '${controller.solicitud!.cliente!.usuario!.nombre} ${controller.solicitud!.cliente!.usuario!.apellidoP ?? ''} ${controller.solicitud!.cliente!.usuario!.apellidoM ?? ''}'
                                   .toUpperCase()),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StarRating(double.parse(controller
-                                  .contrato!.calificacion
+                                  .solicitud!.cliente!.calificacion
                                   .toString())),
                               parrafo(
-                                  '  (${controller.contrato!.calificacion})'),
+                                  '  (${controller.solicitud!.cliente!.calificacion})'),
                             ],
                           )
                         ],
@@ -64,7 +65,7 @@ class InformacionContratacionView extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: TextButton(
                     onPressed: () async {
-                      await controller.obtenerOpiniones();
+                      // await controller.obtenerOpiniones();
                       Get.defaultDialog(
                         title: 'Opiniones',
                         backgroundColor: whiteTheme_,
@@ -81,7 +82,7 @@ class InformacionContratacionView extends StatelessWidget {
                               : ListView.builder(
                                   itemCount: controller.opiniones.length,
                                   itemBuilder: (context, index) {
-                                    return opinion(controller.opiniones[index]);
+                                    // return opinion(controller.opiniones[index]);
                                   }),
                         ),
                         cancel: GestureDetector(
@@ -117,7 +118,7 @@ class InformacionContratacionView extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
-                  child: parrafo('${controller.contrato!.descripcion}'),
+                  child: parrafo('${controller.solicitud!.mensaje}'),
                 ),
                 const SizedBox(
                   height: 30,
@@ -134,7 +135,7 @@ class InformacionContratacionView extends StatelessWidget {
                       ),
                     ),
                     parrafoAuto(
-                        'Estatus trabajador: ${controller.contrato!.estatusTrabajador}'),
+                        'Estatus trabajador: ${controller.solicitud!.estatusCliente}'),
                   ],
                 ),
                 Row(
@@ -148,7 +149,7 @@ class InformacionContratacionView extends StatelessWidget {
                       ),
                     ),
                     parrafoAuto(
-                        'Estatus del cliente: ${controller.contrato!.estatusCliente}'),
+                        'Estatus del cliente: ${controller.solicitud!.estatusSolicitante}'),
                   ],
                 ),
                 Obx(
@@ -179,7 +180,7 @@ class InformacionContratacionView extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Numero de telefono: ${controller.contrato!.celular}',
+                                      'Numero de telefono: ${controller.solicitud!.cliente!.celular}',
                                       style: const TextStyle(
                                           color: blackTheme_, fontSize: 17),
                                     ),
@@ -201,7 +202,7 @@ class InformacionContratacionView extends StatelessWidget {
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        'Correo electronico: ${controller.contrato!.correo}',
+                                        'Correo electronico: ${controller.solicitud!.cliente!.usuario!.correo}',
                                         style: const TextStyle(
                                             color: blackTheme_, fontSize: 17),
                                       ),
@@ -223,8 +224,8 @@ class InformacionContratacionView extends StatelessWidget {
                 SizedBox(
                   height: Get.height * 0.06,
                 ),
-                controller.contrato!.estatusCliente == 'Terminado'
-                    ? controller.contrato!.estatusTrabajador == 'Terminado'
+                controller.solicitud!.estatusCliente == 'Terminado'
+                    ? controller.solicitud!.estatusSolicitante == 'Terminado'
                         ? Column(
                             children: [
                               GestureDetector(
@@ -237,7 +238,7 @@ class InformacionContratacionView extends StatelessWidget {
                                           minChildSize: 0.4,
                                           builder: (context, scrollcontroller) {
                                             return calificar(
-                                                controller.contrato!);
+                                                controller.solicitud!);
                                           }),
                                       isScrollControlled: true,
                                       backgroundColor: whiteTheme_);
@@ -315,10 +316,10 @@ class InformacionContratacionView extends StatelessWidget {
                                         )
                                       : GestureDetector(
                                           onTap: () async {
-                                            await controller.agregarFavorito(
-                                                int.parse(controller
-                                                    .contrato!.idOficio
-                                                    .toString()));
+                                            // await controller.agregarFavorito(
+                                            //     int.parse(controller
+                                            //         .contrato!.idOficio
+                                            //         .toString()));
                                           },
                                           child: Container(
                                             width: Get.width,
@@ -426,20 +427,9 @@ class InformacionContratacionView extends StatelessWidget {
                                 textCancel: 'Cancelar',
                                 onConfirm: () async {
                                   // Get.back();
-                                  await controller.actualizarTrabajo();
+                                  // await controller.actualizarTrabajo();
                                 },
                               );
-                              // Get.bottomSheet(
-                              //     DraggableScrollableSheet(
-                              //         initialChildSize: 0.7,
-                              //         maxChildSize: 0.7,
-                              //         expand: false,
-                              //         minChildSize: 0.4,
-                              //         builder: (context, scrollcontroller) {
-                              //           return calificar(controller.contrato!);
-                              //         }),
-                              //     isScrollControlled: true,
-                              //     backgroundColor: whiteTheme_);
                             },
                             child: Container(
                               width: Get.width,

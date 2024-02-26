@@ -1,13 +1,12 @@
 import 'package:app/config/theme.dart';
 import 'package:app/helpers/api.dart';
 import 'package:app/helpers/formatos.dart';
-import 'package:app/models/contrato.dart';
+
+import 'package:app/models/solicitud.dart';
 import 'package:app/screens/usuario/contrataciones/contratacion_controller.dart';
-import 'package:app/widgets/calificar.dart';
-import 'package:app/widgets/snackbar.dart';
+
 import 'package:app/widgets/textos.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:get/get.dart';
 
@@ -35,7 +34,6 @@ class ContratacionView extends StatelessWidget {
                     ),
                     Container(
                         margin: const EdgeInsets.only(left: 15),
-                        // alignment: Alignment.center,
                         child: titulo('Contratos'))
                   ],
                 ),
@@ -95,42 +93,38 @@ class ContratacionView extends StatelessWidget {
                     ? const Center(
                         child: CircularProgressIndicator.adaptive(),
                       )
-                    : controller.contratos.isEmpty
+                    : controller.solicitudes.isEmpty
                         ? SizedBox(
-                            child: parrafo('${controller.mensaje}'),
+                            child: parrafo(controller.mensaje.value),
                           )
                         : controller.identificador.value == 0
                             ? Flexible(
                                 child: ListView.builder(
                                     itemCount:
-                                        controller.contratosActivas.length,
+                                        controller.solicitudesActivas.length,
                                     itemBuilder: ((context, index) {
                                       return GestureDetector(
                                         onTap: () {
                                           controller.informacionContrato(
                                               controller
-                                                  .contratosActivas[index]);
+                                                  .solicitudesActivas[index]);
                                         },
-                                        child: tarjeta(
-                                          controller.contratosActivas[index],
-                                        ),
+                                        child: tarjeta(controller
+                                            .solicitudesActivas[index]),
                                       );
                                     })))
                             : Flexible(
                                 child: ListView.builder(
-                                    itemCount:
-                                        controller.contratosFinalizadas.length,
+                                    itemCount: controller
+                                        .solicitudesFinalizadas.length,
                                     itemBuilder: ((context, index) {
                                       return GestureDetector(
                                         onTap: () {
                                           controller.informacionContrato(
-                                              controller
-                                                  .contratosFinalizadas[index]);
+                                              controller.solicitudes[index]);
                                         },
-                                        child: tarjeta(
-                                          controller
-                                              .contratosFinalizadas[index],
-                                        ),
+                                        child: tarjeta(controller
+                                            .solicitudesFinalizadas[index]),
                                       );
                                     }))),
               ),
@@ -141,16 +135,17 @@ class ContratacionView extends StatelessWidget {
     );
   }
 
-  Widget tarjeta(Contrato contrato) {
+  Widget tarjeta(Solicitud solicitud) {
     return Center(
       child: ListTile(
         leading: CircleAvatar(
-            backgroundImage: NetworkImage(contrato.tipo == 'ninguno'
-                ? '${ApiService().ruta}${contrato.usuarioImagen}'
-                : '${contrato.usuarioImagen}')),
+            backgroundImage: NetworkImage(solicitud.cliente!.usuario!.auth ==
+                    'ninguno'
+                ? '${ApiService().ruta}${solicitud.cliente!.usuario!.imagen}'
+                : '${solicitud.cliente!.usuario!.imagen}')),
         title: Center(
             child: Text(
-          '${contrato.nombre} ${contrato.apellidoP ?? ''}',
+          '${solicitud.cliente!.usuario!.nombre} ${solicitud.cliente!.usuario!.apellidoP ?? ''}',
           style:
               const TextStyle(color: blackTheme_, fontWeight: FontWeight.bold),
         )),
@@ -162,11 +157,11 @@ class ContratacionView extends StatelessWidget {
             //   textAlign: TextAlign.left,
             // ),
             Text(
-              'Fecha: ${Formato().formatingDateHour(contrato.fecha.toString())}',
+              'Fecha: ${Formato().formatingDateHour(solicitud.fecha.toString())}',
               textAlign: TextAlign.left,
             ),
             Text(
-              'Estado: ${contrato.estado}',
+              'Estado: ${solicitud.estatus}',
               textAlign: TextAlign.left,
             ),
             // Text(

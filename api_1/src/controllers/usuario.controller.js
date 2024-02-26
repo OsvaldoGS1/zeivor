@@ -1,24 +1,39 @@
-// const cliente = require("../config/db.js");
 const { validationResult } = require("express-validator");
-const usuarioScheme = require("../models/usuario.model.js");
+const usuarioSchema = require("../models/usuario.model.js");
 const { Security } = require("../../../api/src/config/passwords.js");
 
 const { HtmlCorreo } = require("../config/html_mail.js");
 const { transporter } = require("../config/mail.js");
 const { Eliminar } = require("../helpers/eliminar.js");
 const { join } = require("path");
-// const { use } = require("../routes/usuario.js");
 
 const iniciar_sesion = async (req, res) => {
   try {
-    // const {corre,}
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     const { correo, password } = req.body;
 
-    const user = await usuarioScheme.findOne({ correo: correo });
+    // const user = await usuarioScheme.aggregate([
+    //   {
+    //     $lookup: {
+    //       from: "estados",
+    //       localField: "estado_lugar",
+    //       foreignField: "_id",
+    //       as: "estado_lugar",
+    //     },
+    //   },
+    //   {
+    //     $match: {
+    //       correo: correo,
+    //     },
+    //   },
+    // ]);
+
+    const user = await usuarioSchema
+      .findOne({ correo: correo })
+      .populate("estado_lugar");
 
     if (!user) {
       return res
@@ -29,7 +44,7 @@ const iniciar_sesion = async (req, res) => {
     const contrasena = Security.encriptar(password);
 
     if (contrasena !== user.password) {
-      return res.status(404).json({ message: "Contraseña incorrecta" });
+      return res.status(404).json({ message: "Credenciales invalidas" });
     }
 
     return res.status(200).json({ message: "Bienvenido", usuario: user });
@@ -46,7 +61,7 @@ const registro = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
       å;
     }
-    // const new_usuario = new usuarioScheme(req.body);
+
     const {
       correo,
       nombre,
@@ -56,9 +71,10 @@ const registro = async (req, res) => {
       fecha,
       sexo,
       nacimiento,
+      estado,
     } = req.body;
 
-    const verificar = await usuarioScheme.findOne({
+    const verificar = await usuarioSchema.findOne({
       correo: correo,
     });
 
@@ -80,15 +96,21 @@ const registro = async (req, res) => {
       correo: correo,
       telefono: telefono,
       password: pass_encriptada,
-      tipo_usuario: "cliente",
+      tipo_usuario: "Cliente",
+      imagen: "",
       fecha_registro: fecha,
-      tipo_red_social: "ninguno",
+      estado_lugar: estado,
+      // auth: "",
       estatus: "Activo",
       verificado: false,
+      token: "",
     });
     const resultado = await new_usuario.save();
     if (!resultado) {
+      return res.status(404).json({ message: "Error al guardar el Usuario" });
     }
+    const usuario = await resultado.populate("estado_lugar");
+    console.log(resultado);
     await transporter.sendMail({
       from: '<_mainaccount@seivor.com> "SEIVOR" ',
       to: correo,
@@ -96,7 +118,7 @@ const registro = async (req, res) => {
       html: HtmlCorreo.plantilla(nombre, correo, pass, 2024),
     });
 
-    res.status(200).json({ message: "Registro Exitoso", usuario: resultado });
+    res.status(200).json({ message: "Registro Exitoso", usuario: usuario });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
@@ -119,7 +141,8 @@ const actualizarImagen = async (req, res) => {
     const { usuario } = req.body;
     const { imagen } = req.files;
 
-    const user = await usuarioScheme.findOne({ _id: usuario });
+    const user = await usuarioSchema.findOne({ _id: usuario });
+    // console.log(user);
 
     if (!user) {
       return res.status(404).json({ message: "Error al encontrar el usuario" });
@@ -148,16 +171,19 @@ const actualizarImagen = async (req, res) => {
 
     const imagen_url = "/usuarios/" + nombre_imagen;
 
-    const update_usuario = await usuarioScheme.updateOne(
+    const update_usuario = await usuarioSchema.updateOne(
       { _id: usuario },
       { $set: { imagen: imagen_url } }
     );
 
-    if (update_usuario.nModified === 0) {
-      return res.status(404).json({ message: "Error al registrar la imagen" });
-    }
+    // if (update_usuario.modifiedCount === 0) {
+    //   return res.status(404).json({ message: "Error al registrar la imagen" });
+    // }
 
-    const new_usuario = await usuarioScheme.findById(usuario);
+    console.log(update_usuario);
+    const new_usuario = await usuarioSchema
+      .findById(usuario)
+      .populate("estado_lugar");
     return res
       .status(200)
       .json({ message: "Imagen actualizada", usuario: new_usuario });
@@ -166,4 +192,10 @@ const actualizarImagen = async (req, res) => {
     return res.status(500).json(error);
   }
 };
+
+const registroAuth = async (req, res) => {
+  try {
+  } catch (error) {}
+};
+
 module.exports = { iniciar_sesion, registro, actualizarImagen };

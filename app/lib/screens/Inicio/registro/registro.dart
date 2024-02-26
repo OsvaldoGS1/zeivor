@@ -1,8 +1,10 @@
 import 'package:app/config/theme.dart';
+import 'package:app/models/estado.dart';
 // import 'package:app/routes/app_pages.dart';
 import 'package:app/screens/Inicio/registro/registro_controller.dart';
 import 'package:app/widgets/footer.dart';
 import 'package:app/widgets/textos.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -139,6 +141,7 @@ class RegistroView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5)),
                         // padding: const EdgeInsets.only(left: 10, right: 10),
                         alignment: Alignment.center,
+
                         child: DropdownButton(
                           items: const [
                             DropdownMenuItem(
@@ -151,12 +154,26 @@ class RegistroView extends StatelessWidget {
                             ),
                             DropdownMenuItem(
                               value: 2,
-                              child: Text('Prefiero no decirlo'),
+                              child: Text('Otro'),
                             ),
                           ],
                           onChanged: (value) {
                             controller.identificador.value =
                                 int.parse(value.toString());
+                            // String selectedText = '';
+                            switch (value) {
+                              case 0:
+                                controller.sexo.value = 'Hombre';
+                                break;
+                              case 1:
+                                controller.sexo.value = 'Mujer';
+                                break;
+                              case 2:
+                                controller.sexo.value = 'Otro';
+                                break;
+                            }
+                            print(controller.sexo.value);
+                            // selectedText
                           },
                           value: controller.identificador.value,
                           icon: const Icon(Icons.arrow_drop_down_rounded),
@@ -178,7 +195,49 @@ class RegistroView extends StatelessWidget {
                   controller.selectDate(context);
                 },
                 child: Container(
-                  child: parrafo('Fecha de nacimiento'),
+                  width: Get.width,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: blackTheme_.withOpacity(0.5)),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Column(
+                    children: [
+                      parrafo('Fecha de nacimiento:'),
+                      Obx(() => parrafoAuto(controller.nacimiento.value))
+                    ],
+                  ),
+                ),
+              ),
+              Obx(
+                () => Container(
+                  margin: const EdgeInsets.only(
+                    top: 30,
+                  ),
+                  child: DropdownSearch(
+                    items: controller.estados.value,
+                    itemAsString: (item) => item.nombre,
+                    onChanged: (value) {
+                      // Estado estado = value;
+                      controller.estado.value = value.sId;
+                      // print(estado.sId);
+                    },
+                    popupProps: const PopupProps.menu(
+                      showSearchBox: true,
+                    ),
+                    dropdownButtonProps: const DropdownButtonProps(
+                      color: pink_,
+                    ),
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      textAlignVertical: TextAlignVertical.center,
+                      textAlign: TextAlign.center,
+                      dropdownSearchDecoration: InputDecoration(
+                          hintText: 'Seleccione su estado o región',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          )),
+                    ),
+                  ),
                 ),
               ),
               Container(
@@ -262,46 +321,51 @@ class RegistroView extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: pink_,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                margin: const EdgeInsets.only(top: 20, bottom: 60),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextButton(
-                    onPressed: () async {
-                      controller.isLoading.value
-                          ? null
-                          : await controller.validar();
-                    },
-                    child: Obx(
-                      () => Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          controller.isLoading.value
-                              ? const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: CircularProgressIndicator.adaptive(
-                                    backgroundColor: whiteTheme_,
+              Obx(
+                () => controller.acepto.isFalse
+                    ? const SizedBox()
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: pink_,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        margin: const EdgeInsets.only(top: 20, bottom: 60),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextButton(
+                            onPressed: () async {
+                              controller.isLoading.value
+                                  ? null
+                                  : await controller.validar();
+                            },
+                            child: Obx(
+                              () => Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  controller.isLoading.value
+                                      ? const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: CircularProgressIndicator
+                                              .adaptive(
+                                            backgroundColor: whiteTheme_,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                  Text(
+                                    controller.isLoading.value
+                                        ? 'Registrandose'
+                                        : 'Registrarse',
+                                    style: const TextStyle(
+                                        color: whiteTheme_,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                )
-                              : const SizedBox(),
-                          Text(
-                            controller.isLoading.value
-                                ? 'Registrandose'
-                                : 'Registrarse',
-                            style: const TextStyle(
-                                color: whiteTheme_,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                                ],
+                              ),
+                            ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               ),
               footer()
             ]),

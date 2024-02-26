@@ -23,7 +23,7 @@ class Datos with CacheManager {
 
   void checkLogin() {
     Usuario user = recoveryData();
-    if (user.idUsuario != null) {
+    if (user.sId != null) {
       isLogged.value = true;
       // return true;
     } else {

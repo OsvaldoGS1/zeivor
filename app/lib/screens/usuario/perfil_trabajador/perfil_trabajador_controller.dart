@@ -1,20 +1,31 @@
+import 'dart:io';
+
 import 'package:app/helpers/data.dart';
 import 'package:app/helpers/obtener_oficio.dart';
-import 'package:app/models/oficio.dart';
+import 'package:app/models/cliente.dart';
+// import 'package:app/models/oficio.dart';
 import 'package:app/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PerfilTrabajadorController extends GetxController {
   RxBool isloading = false.obs;
-  Oficio? oficio;
+  Cliente? cliente;
   Usuario? usuario;
+
   @override
   void onInit() async {
     isloading.value = true;
     usuario = Datos().recoveryData();
-    oficio = await DatosOficio().datosOficio(usuario!);
+    cliente = await DatosCliente().datosCliente(usuario!);
     llenarDatos();
+    if (cliente!.imagenesTrabajo!.isEmpty) {
+      imagenesIsEmpty.value = true;
+    } else {
+      imagenesCliente.value = cliente!.imagenesTrabajo!.toList();
+      imagenesIsEmpty.value = false;
+    }
     isloading.value = false;
     super.onInit();
   }
@@ -44,39 +55,78 @@ class PerfilTrabajadorController extends GetxController {
   TextEditingController pais = TextEditingController();
 
   void llenarDatos() {
-    profesion.text = oficio!.profesion ?? '';
-    descripcion.text = oficio!.descripcion ?? '';
-    celularContacto.text = oficio!.celular ?? '';
-    referencia1.text = oficio!.referencia1 ?? '';
-    referencia2.text = oficio!.referencia2 ?? '';
-    referencia3.text = oficio!.referencia3 ?? '';
-    montoController.text = oficio!.visitaCobro ?? '';
-    if (oficio!.visible.toString() == 'si') {
-      mostrarDireccion.value = true;
-    } else {
-      mostrarDireccion.value = false;
+    profesion.text = cliente!.profesion ?? '';
+    descripcion.text = cliente!.descripcion ?? '';
+    celularContacto.text = cliente!.celular ?? '';
+
+    calle.text = cliente!.direccion!.calle ?? '';
+    colonia.text = cliente!.direccion!.colonia ?? '';
+    cp.text = cliente!.direccion!.cp.toString();
+    municipio.text = cliente!.direccion!.municipio ?? '';
+    estado.text = cliente!.direccion!.estado ?? '';
+    pais.text = cliente!.direccion!.pais ?? '';
+  }
+
+  RxList<String> imagenesCliente = <String>[].obs;
+
+  RxList<File> imagenes = <File>[].obs;
+  RxBool imagenesIsEmpty = false.obs;
+
+  List<File> obtenerListaDeImagenesFromGallery() {
+    Future<void> seleccionarImagenesDesdeGaleria() async {
+      List<XFile>? result = await ImagePicker().pickMultiImage(
+        imageQuality: 85,
+        maxWidth: 800,
+      );
+
+      if (result != null) {
+        imagenes.value += result.map((XFile file) => File(file.path)).toList();
+        imagenesIsEmpty.value = true;
+      }
     }
 
-    calle.text = oficio!.calle ?? '';
-    colonia.text = oficio!.colonia ?? '';
-    cp.text = oficio!.cp ?? '';
-    municipio.text = oficio!.municipio ?? '';
-    estado.text = oficio!.estado ?? '';
-    pais.text = oficio!.pais ?? '';
+    seleccionarImagenesDesdeGaleria();
+    return imagenes;
+  }
 
-    List pagos = [];
-    pagos = oficio!.metodosPago!.split(',');
-    if (pagos.contains('1')) {
-      tarjeta.value = 'Tarjeta';
-      isTarjeta.value = true;
+  List<File> obtenerListaDeImagenesFromCamara() {
+    imagenesIsEmpty.value = false;
+    Future<void> capturarImagenDesdeCamara() async {
+      XFile? result = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85,
+        maxWidth: 800,
+      );
+
+      if (result != null) {
+        imagenes.add(File(result.path));
+        imagenesIsEmpty.value = true;
+      }
     }
-    if (pagos.contains('2')) {
-      transferencia.value = 'Transferencia';
-      isTransferencia.value = true;
+
+    capturarImagenDesdeCamara();
+    return imagenes;
+  }
+
+  // RxList<String> imagenes = <String>[].obs;
+
+  Future pickImageFromGallery() async {
+    List<XFile>? pickedImages = await ImagePicker().pickMultiImage();
+
+    if (pickedImages != null && pickedImages.isNotEmpty) {
+      return pickedImages;
     }
-    if (pagos.contains('3')) {
-      efectivo.value = 'Efectivo';
-      isEfectivo.value = true;
+
+    return [];
+  }
+
+  Future pickImageFromCamera() async {
+    XFile? pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.camera);
+
+    if (pickedImage != null) {
+      // Aquí puedes manejar la imagen tomada desde la cámara
+      // La ruta de la imagen está en pickedImage.path
     }
   }
 }

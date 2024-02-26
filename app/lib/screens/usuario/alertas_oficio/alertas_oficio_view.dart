@@ -170,7 +170,7 @@ class AlertasOficioView extends StatelessWidget {
                       onConfirm: () async {
                         Get.back();
                         // await controller.cambiarEstatus();
-                        await controller.aceptarAlerta(alerta);
+                        // await controller.aceptarAlerta(alerta);
                       },
                     );
                   },

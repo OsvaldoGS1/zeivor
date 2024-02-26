@@ -1,12 +1,13 @@
 import 'package:app/config/theme.dart';
 import 'package:app/models/contrato.dart';
 import 'package:app/models/oferta.dart';
+import 'package:app/models/solicitud.dart';
 import 'package:app/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 
-Widget calificar(Contrato contrato) {
+Widget calificar(Solicitud solicitud) {
   return SingleChildScrollView(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -26,7 +27,8 @@ Widget calificar(Contrato contrato) {
           width: Get.width,
           child: Column(
             children: [
-              Text("¿Como estuvo el servicio de ${contrato.nombre}?",
+              Text(
+                  "¿Como estuvo el servicio de ${solicitud.cliente!.usuario!.nombre}?",
                   style: const TextStyle(
                       color: blackTheme_,
                       fontWeight: FontWeight.bold,
@@ -87,7 +89,7 @@ Widget calificar(Contrato contrato) {
   );
 }
 
-Widget calificarCliente(Oferta oferta) {
+Widget calificarCliente(Solicitud oferta) {
   return SingleChildScrollView(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -108,7 +110,7 @@ Widget calificarCliente(Oferta oferta) {
           child: Column(
             children: [
               Text(
-                  "¿Califica tu experiencia en este trabajo ? Nombre del cliente: ${oferta.nombre}",
+                  "¿Califica tu experiencia en este trabajo ? Nombre del cliente: ${oferta.solicitante!.nombre}",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       color: blackTheme_,

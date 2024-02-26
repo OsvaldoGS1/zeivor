@@ -2,6 +2,7 @@
 
 import 'package:app/config/theme.dart';
 import 'package:app/helpers/api.dart';
+import 'package:app/models/cliente.dart';
 import 'package:app/models/profesionista_disponibles.dart';
 import 'package:app/routes/app_pages.dart';
 // import 'package:app/routes/app_pages.dart';
@@ -330,21 +331,6 @@ class BuscarView extends StatelessWidget {
             ),
           ),
         ),
-        // Obx(() => controller.resultados.isEmpty
-        //     ? Column(
-        //         children: [
-        //           Container(
-        //             width: Get.width * 0.8,
-        //             alignment: Alignment.center,
-        //             child: Text(
-        //               'Estas ubicado en: \n${lugar!.thoroughfare}, Col. ${lugar.subLocality}, ${lugar.subAdministrativeArea}, ${lugar.administrativeArea}',
-        //               textAlign: TextAlign.center,
-        //               style: const TextStyle(color: blackTheme_, fontSize: 18),
-        //             ),
-        //           ),
-        //         ],
-        //       )
-        //     : const SizedBox()),
         Obx(() => controller.isloading.value
             ? const Center(
                 child: CircularProgressIndicator.adaptive(
@@ -370,10 +356,8 @@ class BuscarView extends StatelessWidget {
                                   bottom: 0, top: 10, left: 20, right: 20),
                               child: GestureDetector(
                                 onTap: () {
-                                  Get.toNamed(Routes.detalles, arguments: [
-                                    'busqueda',
-                                    controller.resultados[index]
-                                  ]);
+                                  Get.toNamed(Routes.detalles,
+                                      arguments: controller.resultados[index]);
                                 },
                                 child: tarjeta(
                                   controller.resultados[index],
@@ -392,7 +376,7 @@ class BuscarView extends StatelessWidget {
     );
   }
 
-  Widget tarjeta(ProfesionistasDisponibles favorito) {
+  Widget tarjeta(Cliente cliente) {
     return Stack(children: [
       Container(
         // margin: EdgeInsets.only(bottom: Get.height * 0.07),
@@ -406,7 +390,7 @@ class BuscarView extends StatelessWidget {
               bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30)),
           child: Image.network(
-            '${ApiService().ruta}${favorito.imagen}',
+            '${ApiService().ruta}${cliente.imagen}',
             fit: BoxFit.fill,
           ),
         ),
@@ -427,7 +411,7 @@ class BuscarView extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 margin: const EdgeInsets.only(top: 5),
                 child: Text(
-                  '${favorito.profesion} ${favorito.nombre}',
+                  '${cliente.profesion} ${cliente.usuario!.nombre}',
                   style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 19),
                 ),
@@ -441,17 +425,17 @@ class BuscarView extends StatelessWidget {
                         width: Get.width * 0.5,
                         height: 50,
                         child: StarRating(
-                            double.parse(favorito.calificacion.toString()))),
+                            double.parse(cliente.calificacion.toString()))),
                     Text(
-                      '${favorito.calificacion}',
+                      '${cliente.calificacion}',
                       style: const TextStyle(color: blackTheme_, fontSize: 17),
                     ),
                   ],
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(10),
-                child: parrafoAuto('${favorito.descripcion}'),
+                padding: const EdgeInsets.all(10),
+                child: parrafoAuto('${cliente.descripcion}'),
               ),
             ],
           ),

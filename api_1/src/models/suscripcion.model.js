@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 
 const suscripcionSchema = mongoose.Schema({
   usuario: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "usuarios",
     required: true,
   },
-  oficio: {
-    type: Schema.Types.ObjectId,
-    ref: "oficios",
+  cliente: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "cliente",
     required: true,
   },
   fecha_pago_inicio: { type: Date, required: true },
@@ -26,7 +26,7 @@ const suscripcionSchema = mongoose.Schema({
   total: { type: Number, required: true },
   estado: {
     type: String,
-    enum: ["Activa", "Pendiente", "Cancelada"],
+    enum: ["Pagada", "Pendiente", "Cancelada"],
     required: true,
   },
 });

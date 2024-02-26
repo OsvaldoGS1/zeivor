@@ -1,8 +1,10 @@
 import 'package:app/helpers/api.dart';
 import 'package:app/helpers/data.dart';
-import 'package:app/models/favorito.dart';
-import 'package:app/models/opiniones_trabajador.dart';
-import 'package:app/models/profesionista_disponibles.dart';
+import 'package:app/models/cliente.dart';
+// import 'package:app/models/favorito.dart';
+import 'package:app/models/opinion.dart';
+
+// import 'package:app/models/profesionista_disponibles.dart';
 import 'package:app/models/usuario.dart';
 import 'package:app/routes/app_pages.dart';
 import 'package:app/screens/home/home_controller.dart';
@@ -12,58 +14,34 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class DetallesController extends GetxController {
-  Rx<Favorito> oficio = Favorito().obs;
-  Rx<ProfesionistasDisponibles> profesion = ProfesionistasDisponibles().obs;
   RxString tipo = ''.obs;
-  RxString tarjeta = ''.obs;
-  RxString transferencia = ''.obs;
-  RxString efectivo = ''.obs;
+
   RxBool isActivo = false.obs;
   Usuario? usuario;
 
+  Cliente cliente = Get.arguments;
   @override
   void onInit() {
     usuario = Datos().recoveryData();
-    tipo.value = Get.arguments[0];
-    List pagos = [];
-    if (tipo.value == 'favorito') {
-      oficio.value = Get.arguments[1];
-      pagos = oficio.value.metodosPago!.split(',');
-    } else {
-      profesion.value = Get.arguments[1];
-      pagos = profesion.value.metodosPago!.split(',');
-    }
-    isActivo.value = verEstatus();
-    // oficio.value = Get.arguments;
-    if (pagos.contains('1')) {
-      tarjeta.value = 'Tarjeta';
-    }
-    if (pagos.contains('2')) {
-      transferencia.value = 'Transferencia';
-    }
-    if (pagos.contains('3')) {
-      efectivo.value = 'Efectivo';
-    }
+    mensaje.text =
+        'Hola, soy ${usuario!.nombre}  ${usuario!.apellidoP ?? ''} necesito que...';
+
     super.onInit();
   }
 
-  List<OpinionTrabajador> opiniones = [];
+  List<Opinion> opiniones = [];
   RxString message = ''.obs;
   Future obtenerOpiniones() async {
     try {
       ApiService apiService = ApiService();
 
-      Map<String, dynamic> body = {
-        "oficio": tipo.value == 'favorito'
-            ? oficio.value.idOficio
-            : profesion.value.idOficio
-      };
+      Map<String, dynamic> body = {"cliente": cliente.sId};
 
-      final respuesta = await apiService.fetchData('opiniones/trabajador',
+      final respuesta = await apiService.fetchData('opinion/cliente',
           method: Method.POST, body: body);
 
       if (apiService.status == 200) {
-        opiniones = OpinionTrabajador.fromJsonList(respuesta);
+        opiniones = Opinion.fromJsonList(respuesta);
         message.value = '';
       } else {
         message.value = respuesta['message'];
@@ -75,24 +53,8 @@ class DetallesController extends GetxController {
     }
   }
 
-  bool verEstatus() {
-    bool estatus = false;
+  // Future obtenerOpiniones() async {}
 
-    if (tipo.value == 'favorito') {
-      if (oficio.value.estatus == 'Activo') {
-        estatus = true;
-      } else {
-        estatus = false;
-      }
-    } else {
-      if (profesion.value.estatus == 'Activo') {
-        estatus = true;
-      } else {
-        estatus = false;
-      }
-    }
-    return estatus;
-  }
   //Enviar mensaje o crear contacto
 
   RxBool hizoContacto = false.obs;
@@ -100,8 +62,6 @@ class DetallesController extends GetxController {
   RxString respuestaMensaje = ''.obs;
 
   void irMensaje() {
-    mensaje.text =
-        'Hola, soy ${usuario!.nombre}  ${usuario!.apellidoP ?? ''} necesito que...';
     Get.toNamed(Routes.mensaje);
   }
 
@@ -114,17 +74,14 @@ class DetallesController extends GetxController {
 
       ApiService apiService = ApiService();
       Map<String, dynamic> body = {
-        "oficio": tipo.value == 'favorito'
-            ? oficio.value.idOficio
-            : profesion.value.idOficio,
-        "usuario": usuario!.idUsuario,
+        "solicitante": usuario!.sId,
+        "cliente": cliente.sId,
         "fecha": fecha,
         "mensaje": mensaje.text,
-        "localizacion": ubicacion,
-        "estatus": 'Pendiente'
+        "localizacion": ubicacion
       };
       // print(body);
-      final respuesta = await apiService.fetchData('contacto/agregar',
+      final respuesta = await apiService.fetchData('solicitud/directa',
           method: Method.POST, body: body);
       respuestaMensaje.value = respuesta['message'];
       if (apiService.status == 200) {

@@ -1,5 +1,6 @@
 import 'package:app/helpers/api.dart';
 import 'package:app/helpers/data.dart';
+import 'package:app/models/cliente.dart';
 
 import 'package:app/models/favorito.dart';
 
@@ -20,7 +21,7 @@ class FavoritosController extends GetxController {
   void onInit() async {
     obtenerUsuario();
 
-    await buscarFavoritos();
+    // await buscarFavoritos();
     super.onInit();
   }
 
@@ -32,18 +33,21 @@ class FavoritosController extends GetxController {
   RxInt valorDrop = 1.obs;
   RxBool isFavorite = true.obs;
 
-  List<Favorito> lista = [];
+  // List<Favorito> lista = [];
+  List<Cliente> lista = [];
   RxString message = ''.obs;
 
   Future buscarFavoritos() async {
+    isloading.value = true;
     try {
       ApiService apiService = ApiService();
-      Map<String, dynamic> body = {"usuario": usuario!.idUsuario};
-      final respuesta = await apiService.fetchData('favoritos/usuario',
+      Map<String, dynamic> body = {"usuario": usuario!.sId};
+      final respuesta = await apiService.fetchData('favorito/obtener',
           method: Method.POST, body: body);
-
+      // print(respuesta);
       if (apiService.status == 200) {
-        lista = Favorito.fromJsonList(respuesta);
+        lista = Cliente.fromJsonList(respuesta);
+        // print(lista);
       } else {
         message.value = respuesta['message'];
       }
@@ -53,6 +57,7 @@ class FavoritosController extends GetxController {
         print(error);
       }
     }
+    isloading.value = false;
   }
 
   ///Enviar mensaje a profesionista
@@ -81,7 +86,7 @@ class FavoritosController extends GetxController {
       // print(ps);
       Map<String, dynamic> body = {
         "oficio": oficio.value.idOficio,
-        "usuario": usuario!.idUsuario,
+        "usuario": usuario!.sId,
         "fecha": fecha,
         "mensaje": mensaje.text,
         "localizacion": '${ps!.latitude}, ${ps.longitude}',

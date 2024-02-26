@@ -21,6 +21,7 @@ class ServiciosController extends GetxController {
   RxString imagenPath = ''.obs;
 
   RxBool cobroVisita = true.obs;
+  RxBool emiteFacturas = false.obs;
 
   Usuario? usuario;
 
@@ -115,7 +116,7 @@ class ServiciosController extends GetxController {
       var request = http.MultipartRequest('POST', url);
 
       String metodos = obtenerMetodosPago();
-      request.fields['usuario'] = usuario!.idUsuario.toString();
+      request.fields['usuario'] = usuario!.sId.toString();
       request.fields['profesion'] = profesion.text;
       request.fields['descripcion'] = descripcion.text;
       request.fields['metodos'] = metodos;

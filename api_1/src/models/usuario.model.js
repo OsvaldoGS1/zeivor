@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const usuarioScheme = mongoose.Schema({
+const usuarioSchema = mongoose.Schema({
   nombre: {
     type: String,
     required: true,
@@ -8,26 +8,28 @@ const usuarioScheme = mongoose.Schema({
   apellido_p: { type: String, required: false },
   apellido_m: { type: String, required: false },
   sexo: { type: String, enum: ["Hombre", "Mujer", "Otro"], index: true },
+  fecha_nacimiento: { type: Date, required: true },
   correo: { type: String, required: true, index: true },
   telefono: { type: String, required: false },
   password: { type: String, required: false },
   tipo_usuario: {
     type: String,
-    enum: ["Cliente", "Oficio", "Admin"],
+    enum: ["Normal", "Cliente", "Admin"],
     index: true,
   },
   imagen: { type: String, required: false },
   fecha_registro: { type: Date, required: true },
-  fecha_nacimiento: { type: Date, required: true },
+
   estado_lugar: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "estados",
     required: true,
   },
   auth: {
-    apple: { type: String, required: false },
-    google: { type: String, required: false },
-    facebook: { type: String, required: false },
+    type: String,
+    enum: ["apple", "facebook, google", "ninguno"],
+    default: "ninguno",
+    required: true,
   },
   estatus: {
     type: String,
@@ -40,10 +42,10 @@ const usuarioScheme = mongoose.Schema({
     index: true,
   },
   favoritos: {
-    type: [{ type: Schema.Types.ObjectId, ref: "oficios" }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "clientes" }],
     required: false,
     default: [],
   },
   token: { type: String, required: false },
 });
-module.exports = mongoose.model("usuarios", usuarioScheme);
+module.exports = mongoose.model("usuarios", usuarioSchema);
